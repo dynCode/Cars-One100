@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns     = "http://www.w3.org/ns/widgets"
+        xmlns:gap = "http://phonegap.com/ns/1.0"
+        id        = "com.carsone100app"
+        versionCode = "100" 
+        version   = "1.0.0">
+
+    <name>Eduplex Sport</name>
+
+    <description>
+        Cars One100 - app. 
+        
+        At Cars One100, it’s our mission to protect used car buyers by empowering them with the right knowledge they need.
+        
+        With the Cars One100 mobile app, you can request a qualified mechanic to come to your location, inspect and assess the used car you are interested in. Irrespective of where you saw the car advertised, we can assist.
+    </description>
+
+    <author href="https://carsone100.com/" email="hanru@one100tech.com">
+        One100 Tech
+    </author>
+    <preference name="phonegap-version" value="cli-8.0.0" />
+    <platform name="ios" >
+        <preference name="orientation" value="portrait" />
+        <preference name="fullscreen" value="false" />  
+        <preference name="target-device" value="universal" />
+        <preference name="prerendered-icon" value="true" />
+        <preference name="detect-data-types" value="true" />
+        <preference name="exit-on-suspend" value="true" />  
+        
+        <!-- iPhone 6 / 6+ -->
+        <icon src="res/icons/ios/icon-60@3x.png" width="180" height="180" />
+
+        <!-- iPhone / iPod Touch  -->
+        <icon src="res/icons/ios/icon-60.png" width="60" height="60" />
+        <icon src="res/icons/ios/icon-60@2x.png" width="120" height="120" />
+
+        <!-- iPad -->
+        <icon src="res/icons/ios/icon-76.png" width="76" height="76" />
+        <icon src="res/icons/ios/icon-76@2x.png" width="152" height="152" />
+        <icon src="res/icons/ios/icon-83.5@2x.png" width="167" height="167" />
+
+        <!-- Settings Icon -->
+        <icon src="res/icons/ios/icon-small.png" width="29" height="29" />
+        <icon src="res/icons/ios/icon-small@2x.png" width="58" height="58" />
+        <icon src="res/icons/ios/icon-small@3x.png" width="87" height="87" />
+        
+        <!-- Spotlight Icon -->
+        <icon src="res/icons/ios/icon-40.png" width="40" height="40" />
+        <icon src="res/icons/ios/icon-40@2x.png" width="80" height="80" />
+        <icon src="res/icons/ios/icon-40@3x.png" width="120" height="120" />
+
+        <!-- iPhone / iPod Touch -->
+        <icon src="res/icons/ios/icon-57.png" width="57" height="57" />
+        <icon src="res/icons/ios/icon@2x.png" width="114" height="114" />
+
+        <!-- iPad -->
+        <icon src="res/icons/ios/icon-72.png" width="72" height="72" />
+        <icon src="res/icons/ios/icon-72@2x.png" width="144" height="144" />
+
+        <!-- iPad Spotlight and Settings Icon -->
+        <icon src="res/icons/ios/icon-50.png" width="50" height="50" />
+        <icon src="res/icons/ios/icon-50@2x.png" width="100" height="100" />
+        
+        <icon src="res/icons/ios/icon.png" width="1024" height="1024" />
+        
+        <!-- Config usage update -->
+        <edit-config target="NSPhotoLibraryUsageDescription" file="*-Info.plist" mode="merge">
+            <string>We are using the Camera for uploading your vehicle license disk for verification.</string>
+        </edit-config>
+        <edit-config target="NSCameraUsageDescription" file="*-Info.plist" mode="merge">
+            <string>We are using the Camera for uploading your vehicle license disk for verification.</string>
+        </edit-config>
+        <edit-config target="NSLocationWhenInUseUsageDescription" file="*-Info.plist" mode="merge">
+            <string>We are using your location to display your location and to find mechanics in your vicinity.</string>
+        </edit-config>
+        <edit-config target="NSLocationAlwaysUsageDescription" file="*-Info.plist" mode="merge">
+            <string>We are using your location to display your location and to find mechanics in your vicinity.</string>
+        </edit-config>
+        <edit-config target="NSLocationAlwaysAndWhenInUsageDescription" file="*-Info.plist" mode="merge">
+            <string>We are using your location to display your location and to find mechanics in your vicinity.</string>
+        </edit-config>
+    </platform>
+    <platform name="android" >
+        <preference name="orientation" value="portrait" />
+        <preference name="fullscreen" value="false" />  
+        <icon src="res/icons/android/icon-36-ldpi.png" qualifier="ldpi" />
+        <icon src="res/icons/android/icon-48-mdpi.png" qualifier="mdpi" />
+        <icon src="res/icons/android/icon-72-hdpi.png" qualifier="hdpi" />
+        <icon src="res/icons/android/icon-96-xhdpi.png" qualifier="xhdpi" />
+        <icon src="res/icons/android/icon-144-xxhdpi.png" density="xxhdpi" />
+        <icon src="res/icons/android/icon-192-xxxhdpi.png" density="xxxhdpi" />
+    </platform>
+ 
+    <!-- Third party plugins -->
+    
+    <plugin name="cordova-plugin-camera" spec="~2.4.1">
+        <variable name="CAMERA_USAGE_DESCRIPTION" value="We are using the Camera for uploading your vehicle license disk for verification." />
+        <variable name="PHOTOLIBRARY_USAGE_DESCRIPTION" value="We are using the Camera for uploading your vehicle license disk for verification." />
+    </plugin>
+    <plugin name="cordova-plugin-ios-camera-permissions" spec="1.0.3" >
+        <variable name="CAMERA_USAGE_DESCRIPTION" value="We are using the Camera for uploading your vehicle license disk for verification." />
+        <variable name="PHOTOLIBRARY_USAGE_DESCRIPTION" value="We are using the Camera for uploading your vehicle license disk for verification." />
+    </plugin>
+    
+    <plugin name="cordova-plugin-device-orientation" />
+    <plugin name="cordova-plugin-geolocation" />
+    <plugin name="cordova-plugin-whitelist" />
+    <plugin name="cordova-plugin-x-socialsharing" source="npm" />
+
+    <!-- Define app icon for each platform. -->
+    <icon src="icon.png" />
+    
+    <!-- Whitelisting access -->
+    <access origin="*" />
+    <allow-navigation href="http://*/*" />
+    <allow-navigation href="https://*/*" />
+    <allow-navigation href="data:*" />
+    <!-- Allow SMS links to open messaging app -->
+    <allow-intent href="sms:*" />
+    <!-- Allow tel: links to open the dialer -->
+    <allow-intent href="tel:*" />
+    <!-- Allow geo: links to open maps -->
+    <allow-intent href="geo:*" />
+    <!-- Allow mailto: links to open maps -->
+    <allow-intent href="mailto:*" />
+    <!-- Allow links to web pages to open in a browser -->
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+</widget>

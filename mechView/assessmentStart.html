@@ -1,0 +1,14 @@
+<ons-page>
+    <div style="padding: 20px 30px;">
+        <h4>Scan License Disk</h4>
+        <img ng-show="data.scanDisc.$valid" ngf-thumbnail="data.scanDisc" ngf-size="{width: 350, height: 350, quality: 0.9}">
+        <ons-button modifier="largeFront" ngf-select ng-model="data.scanDisc" name="file" ngf-pattern="'image/*'" ngf-capture="'camera'" ngf-resize-if="$width > 800 || $height > 800" ngf-accept="'image/*'" ngf-max-size="20MB" ngf-resize="{width: 800, height: 800}">Scan</ons-button>
+        <p></p>
+        <ons-button modifier="largeFront" ng-click="assessmentStratPage(data.scanDisc)" style="background-color: #333;">Continue</ons-button>
+        <p></p>
+        <p></p>
+        <p></p>
+        <p></p>
+        <ons-button modifier="largeFront" ng-click="assesmentPage(1)" style="background-color: #333;">Bypass Vehicle Check</ons-button>
+    </div>
+</ons-page>

@@ -1,0 +1,16 @@
+<ons-page>
+    <!--<ons-toolbar>
+        <div class="center">Cars ONE 100</div>
+    </ons-toolbar>-->
+    <h3 style="text-align: center;">Welcome to</h3>
+    <p style="text-align: center; padding: 10px 30px;"><img src="images/logo.jpg" alt="logo" style="width: 100%; max-width: 800px;" /></p>
+    <div style="padding: 10px 30px;">
+        <ons-button modifier="largeFront" ng-click="appNav.pushPage('login.html', { animation : 'fade' })">Login</ons-button>
+        <p></p>
+        <ons-button modifier="largeFront" ng-click="appNav.pushPage('signUp.html', { animation : 'fade' })" style="background-color: #333;">New User / Sign Up</ons-button>
+        <p></p>
+    </div>
+    <div id="mapActions" style="text-align: center; font-size: 14px; color: #C82026;">
+        <span ng-click="appNav.pushPage('termsConditions.html', { animation : 'fade' })">Terms & Conditions</span> | <span  ng-click="appNav.pushPage('termsService.html', { animation : 'fade' })">Terms of Service</span><br><span  ng-click="appNav.pushPage('PrivacyPolicy.html', { animation : 'fade' })">Privacy Policy</span>
+    </div>
+</ons-page>

@@ -1,0 +1,30 @@
+<ons-page>
+    <div style="background-color: #ab0019; height: 100px; color: #fff; text-align: center;position: relative; z-index: 2;line-height: 8;">
+        <ons-row>
+            <ons-col style="color: #fff; text-align: center; font-weight: bold; font-size: 19px;">
+                Your Mechanic is On-Route
+            </ons-col>
+        </ons-row>
+    </div>
+    <div style="padding: 30px; text-align: center;" ng-init="awaitNavResponse(myAppointID)">
+        <p>Your friendly <strong>Cars One100 Mechanic</strong> on his way to your location.</p> 
+        <p><strong>{{liveConfimApp.mechName}}</strong> will meet you in approximately 15minutes</p>
+        <p>If there is any delay, <strong>{{liveConfimApp.mechName}}</strong> will contact you with an update</p>
+        <p>&nbsp;</p>
+        <div style="text-align: center;"><ons-icon size="50px" style="color: #ab0019;" spin icon="fa-cog"></ons-icon>
+        <p>&nbsp;</p>
+    </div>
+    <ons-bottom-toolbar style="background-color: #f1f1f1; height: 110px;">
+        <div style="padding: 10px 30px;">
+            <ons-row>
+                <ons-col width="100px"><img src="images/mechIcon.png" alt="mechFace" style="width: 80px;" ></ons-col>
+                <ons-col style="text-align: left;">
+                    {{liveConfimApp.mechName}}<br>
+                    {{liveConfimApp.carMake}}<br>
+                    {{liveConfimApp.regNo}}<br>
+                    <a ng-href="call:{{liveConfimApp.mechCell}}">{{liveConfimApp.mechCell}}</a>
+                </ons-col>
+            </ons-row>
+        </div>
+    </ons-bottom-toolbar>
+</ons-page>

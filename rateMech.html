@@ -1,0 +1,30 @@
+<ons-page>
+    <div style="background-color: #ab0019; height: 100px; color: #fff; text-align: center;position: relative; z-index: 2;">
+        <ons-row>
+            <ons-col width="20px"></ons-col>
+            <ons-col style="color: #fff; text-align: left; line-height: 100px;">
+                <h4>Assessment Complete</h4>
+            </ons-col>
+        </ons-row>
+    </div>
+    <div style="padding: 20px 30px; text-align: center;">
+        <h4>You will receive an email with the full inspection.</h4>
+        <p style="text-align: center"><ons-icon size="100px" icon="fa-check-circle" style="color:#8bc53e;"></ons-icon></p>
+        <div style="background-color: #f2f2f2">
+            <p>Rate your Mechanic</p>
+            <jk-rating-stars class="my-custom-stars" rating="mechRate" on-rating="submitMechRating(rating)"></jk-rating-stars>
+            <!--
+            <ons-row>
+                <ons-col><ons-button modifier="quiet" ng-click="submitMechRating(1)"> <ons-icon size="40px" icon="fa-star" style="color:#ab0019;"> </ons-icon></ons-button></ons-col>
+                <ons-col><ons-button modifier="quiet" ng-click="submitMechRating(2)"> <ons-icon size="40px" icon="fa-star" style="color:#ab0019;"> </ons-icon></ons-button></ons-col>
+                <ons-col><ons-button modifier="quiet" ng-click="submitMechRating(3)"> <ons-icon size="40px" icon="fa-star" style="color:#ab0019;"> </ons-icon></ons-button></ons-col>
+                <ons-col><ons-button modifier="quiet" ng-click="submitMechRating(4)"> <ons-icon size="40px" icon="fa-star" style="color:#ab0019;"> </ons-icon></ons-button></ons-col>
+                <ons-col><ons-button modifier="quiet" ng-click="submitMechRating(5)"> <ons-icon size="40px" icon="fa-star" style="color:#ab0019;"> </ons-icon></ons-button></ons-col>
+            </ons-row>
+            -->
+        </div>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <div style="text-align: center; font-size: 14px; color: #C82026;"><span ng-click="appNav.pushPage('termsConditions.html', { animation : 'fade' })">Terms & Conditions</span> | <span  ng-click="appNav.pushPage('termsService.html', { animation : 'fade' })">Terms of Service</span><br><span  ng-click="appNav.pushPage('PrivacyPolicy.html', { animation : 'fade' })">Privacy Policy</span></div>
+    </div>
+</ons-page>

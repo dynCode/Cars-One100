@@ -1,0 +1,25 @@
+<ons-page ng-init="liveRequestCountdown()">
+    <ons-toolbar style="background-color: #ab0019;">
+        <div class="left">
+            <ons-toolbar-button ng-click="openMenu()">
+                <ons-icon icon="md-menu" style="color: #fff;"></ons-icon>
+            </ons-toolbar-button>
+        </div>
+    </ons-toolbar>
+    <div style="background-color: #ab0019; height: 100px; color: #fff; text-align: center;position: relative; z-index: 2;">
+        <ons-row>
+            <ons-col style="color: #fff; text-align: center; line-height: 100px;">
+                Mechanic Request Pending
+            </ons-col>
+        </ons-row>
+    </div>
+    <div style="padding: 20px 30px; text-align: center;">
+        <p><img src="images/logo_gear.png" alt="Gear" style="width: 30%;" /></p>
+        <h3 id="liveWait" style="font-size: 56px;color: gray;">{{liveWait}}</h3>
+        <p>Please be patient while we locate the closest mechanic to you...</p>
+        <p><br></p>
+        <p><br></p>
+        <p><br></p>
+        <ons-button modifier="large--quiet" ng-click="cancelRequest(liveConfimApp.appointID)" style="color: #000;">Cancel Request</ons-button>
+    </div>
+</ons-page>

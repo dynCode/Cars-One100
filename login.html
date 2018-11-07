@@ -1,0 +1,42 @@
+<ons-page>
+    <ons-toolbar>
+        <div class="left"><ons-back-button></ons-back-button></div>
+    </ons-toolbar>
+    <p style="text-align: center; padding: 10px 30px;"><img src="images/logo.jpg" alt="logo" style="width: 100%; max-width: 800px;" /></p>
+
+    <h4 style="padding: 20px 30px; font-weight: normal;">Login to CarsOne100</h4>
+
+    <div style="text-align: center; padding: 20px 30px;">
+        <ons-input id="email" type="email" modifier="underbar material" placeholder="Email" float ng-model="login.username" style="width: 100%; padding: 20px 0;"></ons-input>
+        <ons-row>
+            <ons-col>
+                <ons-input id="password" type="{{passInput}}" modifier="underbar material" placeholder="Password" float ng-model="login.password" style="width: 100%; padding: 20px 0;"></ons-input>
+            </ons-col>
+            <ons-col width="50px" style="line-height: 62px;"><div ng-if="passInput === 'password'"><ons-icon icon="fa-eye" ng-click="showPassword()"></ons-icon></div><div ng-if="passInput === 'text'"><ons-icon icon="fa-eye-slash" ng-click="hidePassword()"></ons-icon></div></ons-col>
+        </ons-row>
+        <ons-list>
+            <ons-list-item tappable>
+                <label class="left">
+                    <ons-checkbox input-id="keepLoggedIn" ng-model="login.keepLoggedIn"></ons-checkbox>
+                </label>
+                <label for="keepLoggedIn" class="center">
+                    Keep me logged in
+                </label>
+            </ons-list-item>
+            <ons-list-item tappable>
+                <label class="left">
+                    <ons-checkbox input-id="checkUpdates" ng-model="login.updates"></ons-checkbox>
+                </label>
+                <label for="checkUpdates" class="center">
+                    I authorise Cars One100 to proses my information for a Better User Experience, Marketing and Extra Valued added Products.
+                </label>
+            </ons-list-item>
+        </ons-list>
+    </div>
+    <div style="padding: 0px 30px; text-align: right;">
+         <p><ons-fab modifier="makeBigger" ng-click="logMeIn()"><ons-icon icon="fa-arrow-right"></ons-icon></ons-fab> </p>
+    </div>
+    <div style="text-align: center; font-size: 14px; color: #C82026;">Not signed-up?  <span ng-click="appNav.pushPage('signUp.html', { animation : 'fade' })"><strong>Create account</strong></span></div>
+    <p>&nbsp;</p>
+    <div style="text-align: center; font-size: 14px; color: #C82026;"><span ng-click="appNav.pushPage('termsConditions.html', { animation : 'fade' })">Terms & Conditions</span> | <span  ng-click="appNav.pushPage('termsService.html', { animation : 'fade' })">Terms of Service</span><br><span  ng-click="appNav.pushPage('PrivacyPolicy.html', { animation : 'fade' })">Privacy Policy</span></div>
+</ons-page>

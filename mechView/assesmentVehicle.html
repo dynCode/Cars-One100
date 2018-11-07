@@ -1,0 +1,68 @@
+<ons-page>
+    <div style="padding: 20px 30px;">
+        <h4>Vehicle Details</h4>
+        <hr>
+        <div ng-if="assessment.vehicle.vin">
+            <ons-row>
+                <ons-col width="40%"><strong>Body shape</strong></ons-col>
+                <ons-col>{{assessment.vehicle.bodyShape}}</ons-col>
+            </ons-row>
+            <hr>
+            <ons-row>
+                <ons-col width="40%"><strong>Colour</strong></ons-col>
+                <ons-col>{{assessment.vehicle.colour}}</ons-col>
+            </ons-row>
+            <hr>
+            <ons-row>
+                <ons-col width="40%"><strong>Drive type</strong></ons-col>
+                <ons-col>{{assessment.vehicle.driveType}}</ons-col>
+            </ons-row>
+            <hr>
+            <ons-row>
+                <ons-col width="40%"><strong>Engine Number</strong></ons-col>
+                <ons-col>{{assessment.vehicle.engineNumber}}</ons-col>
+            </ons-row>
+            <hr>
+            <ons-row>
+                <ons-col width="40%"><strong>Fuel type</strong></ons-col>
+                <ons-col>{{assessment.vehicle.fuelType}}</ons-col>
+            </ons-row>
+            <hr>
+            <ons-row>
+                <ons-col width="40%"><strong>Full Model Description</strong></ons-col>
+                <ons-col>{{assessment.vehicle.fullModelDescription}}</ons-col>
+            </ons-row>
+            <hr>
+            <ons-row>
+                <ons-col width="40%"><strong>Gear type</strong></ons-col>
+                <ons-col>{{assessment.vehicle.gearType}}</ons-col>
+            </ons-row>
+            <hr>
+            <ons-row>
+                <ons-col width="40%"><strong>Make</strong></ons-col>
+                <ons-col>{{assessment.vehicle.make}}</ons-col>
+            </ons-row>
+            <hr>
+            <ons-row>
+                <ons-col width="40%"><strong>Model</strong></ons-col>
+                <ons-col>{{assessment.vehicle.model}}</ons-col>
+            </ons-row>
+            <hr>
+            <ons-row>
+                <ons-col width="40%"><strong>VIN</strong></ons-col>
+                <ons-col>{{assessment.vehicle.vin}}</ons-col>
+            </ons-row>
+            <hr>
+            <p></p>
+            <ons-button modifier="largeFront" ng-click="assesmentPage(1)" style="background-color: #333;">Commence Assessment</ons-button>
+        </div>
+        <div ng-if="!assessment.vehicle.vin">
+            <p>There was a problem processing the uploaded scan / or entered VIN number.</p>
+            <ons-button modifier="largeFront" ng-click="loadPage('mechView/assessmentStart.html')" style="background-color: #333;">Rescan</ons-button>
+            <p>
+                <ons-input id="vinNum" modifier="underbar" placeholder="VIN NUMBER" ng-model="assessment.ManVIN" float></ons-input>
+            </p>
+            <ons-button modifier="largeFront" ng-click="processManualVin()">Process VIN</ons-button>
+        </div>
+    </div>
+</ons-page>

@@ -1,0 +1,17 @@
+<ons-page>
+    <ons-toolbar>
+        <div class="left"><ons-back-button></ons-back-button></div>
+    </ons-toolbar>
+    <div style="padding: 20px 30px;">
+        <h4 style="color: #ab0019">Location</h4>
+        <p>My Current Location</p>
+        <p>
+            <ons-input id="address" modifier="underbar" placeholder="Where to?" float ng-model="book.curLocation" style="width: 100%; padding: 20px 0;" ></ons-input>
+        </p>
+        <p>Appointment Location</p>
+        <p>
+            <ons-input places-auto-complete id="otherAddress" modifier="underbar" placeholder="Other Address" float ng-model="book.otherAddress" component-restrictions="{country:'za'}" types="['address']" style="width: 100%; padding: 20px 0;"></ons-input>
+        </p>
+        <ons-button modifier="largeFront" ng-click="liveRequestLookUp()">Confirm Location</ons-button>
+    </div>
+</ons-page>

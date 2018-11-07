@@ -1,0 +1,27 @@
+<ons-page>
+    <div style="background-color: #ab0019; height: 100px; color: #fff; text-align: center;position: relative; z-index: 2;">
+        <ons-row>
+            <ons-col width="20px"></ons-col>
+            <ons-col style="color: #fff; text-align: left; line-height: 100px;">
+                Appointment Confirmed
+            </ons-col>
+            <ons-col style="color: #fff; text-align: right;"><ons-icon icon="fa-times" ng-click="loadPage('home.html')" style="padding: 10px;"></ons-icon></ons-col>
+        </ons-row>
+    </div>
+    <div style="padding: 20px 30px;">
+        <h4>{{rsvpAcceptedApp.date}}</h4>  
+        <p></p>
+        <div style="padding: 10px; background-color: #f1f1f1">
+            <p>{{rsvpAcceptedApp.address}}</p>
+        </div>
+        <p>&nbsp;</p>
+        <p><strong>{{rsvpAcceptedApp.mechName}}</strong></p>
+        <p>{{rsvpAcceptedApp.carMake}}</p>
+        <p>{{rsvpAcceptedApp.regNo}}</p>
+        <ons-row>
+            <ons-col>Inspection<br><h4><sup>R</sup>770</h4></ons-col>
+            <ons-col><img src="images/Payment.png" style="width: 50%;"><br></ons-col>
+        </ons-row>
+        <p><ons-button modifier="large--quiet" ng-click="cancelRequest(rsvpAcceptedApp.appointID)">Cancel Request</ons-button></p>
+    </div>
+</ons-page>

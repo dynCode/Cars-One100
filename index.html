@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+    <head> 
+        <title>Cars ONE 100</title>
+        <meta charset="utf-8" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <link rel="stylesheet" href="css/onsenui.css"/>
+        <link rel="stylesheet" href="css/onsen-css-components.css"/>
+        <link rel="stylesheet" href="css/jk-rating-stars.min.css" />
+        
+        <link rel="stylesheet" href="css/custom.css"/>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBSsY5dquU2xR5nuMri9DMPl43sLUjQh8c&libraries=placeses,visualization,drawing,geometry,places" async defer></script>
+        <script src="js/onsenui.min.js"></script>
+        <script src="js/angular.min.js"></script>
+        <script src="js/angular-onsenui.min.js"></script>
+        
+        <!-- ng Google Maps -->
+        <script src="js/ng-map.min.js"></script>
+        <!-- Date Time Picker -->
+        <script src="js/dateTimePicker/moment.js"></script>
+        <script src="js/dateTimePicker/angular-moment-picker.min.js"></script>
+        <link rel="stylesheet" href="js/dateTimePicker/angular-moment-picker.min.css" />
+        <link rel="stylesheet" href="js/dateTimePicker/material-ui.min.css" />
+        <!-- ng File Upload handler -->
+        <script src="js/ng-file-upload-shim.min.js"></script>
+        <script src="js/ng-file-upload.min.js"></script>
+        <!-- star rating -->
+        <script src="js/jk-rating-stars.min.js"></script>
+        <!-- social share -->
+        <script src="js/angular-socialshare.min.js"></script>
+        <!-- Cordova Script -->
+        <script src="cordova.js"></script> 
+        <!-- custom JS file -->
+        <script src="js/custom.js"></script>
+        <script>
+            ons.disableAutoStyling();
+            ons.ready(function() {  
+                
+            });
+        </script>
+    </head>
+    <body>
+        <ons-splitter ng-controller="AppController" id="AppController" var="menu">
+        <ons-splitter-side id="menu" side="left" width="100%" collapse="">
+            <ons-page>
+                <div style="background-color: #ab0019; height: 100px; color: #fff; text-align: center;position: relative; z-index: 2;" ng-if="userLoggedin">
+                    <ons-row>
+                      <ons-col width="100px"><img src="images/mechIcon.png" alt="mechFace" style="width: 80px; padding: 10px;" ></ons-col>
+                      <ons-col style="color: #fff; text-align: left; line-height: 100px;">
+                          {{user.firstName}} {{user.lastName}}
+                      </ons-col>
+                      <ons-col style="color: #fff; text-align: right;"><ons-icon icon="fa-times" ng-click="menu.left.close()" style="padding: 10px;"></ons-icon></ons-col>
+                    </ons-row>
+                </div>
+                <ons-list>
+                    <ons-list-item ng-click="loadPage('signUp.html')" ng-if="userLoggedin == false" tappable>
+                        Home
+                    </ons-list-item>
+                    <ons-list-item ng-click="loadPage('login.html')" ng-if="userLoggedin == false" tappable>
+                        Login
+                    </ons-list-item>
+                    <ons-list-item ng-click="loadPage('home.html')" ng-if="userLoggedin && user.type == 'customer'" tappable>
+                        Home
+                    </ons-list-item>
+                    <ons-list-item ng-click="userNotes()" ng-if="userLoggedin && user.type == 'customer'" tappable>
+                        Scheduled Appointments
+                    </ons-list-item>
+                    <ons-list-item ng-click="paymentHistory()" ng-if="userLoggedin && user.type == 'customer'" tappable>
+                        Payment History
+                    </ons-list-item>
+                    <ons-list-item ng-click="userAssReport()" ng-if="userLoggedin && user.type == 'customer'" tappable>
+                        Assessment Reports
+                    </ons-list-item>
+                    <ons-list-item ng-click="loadPage('settings.html')" ng-if="userLoggedin && user.type == 'customer'" tappable>
+                        Settings
+                    </ons-list-item>
+                    <ons-list-item ng-click="loadPage('termsConditions.html')" ng-if="userLoggedin && user.type == 'customer'" tappable>
+                        Terms & Conditions
+                    </ons-list-item>
+                    <ons-list-item ng-click="loadPage('termsService.html')" ng-if="userLoggedin && user.type == 'customer'" tappable>
+                        Terms of Service
+                    </ons-list-item>
+                    <ons-list-item ng-click="loadPage('PrivacyPolicy.html')" ng-if="userLoggedin && user.type == 'customer'" tappable>
+                        Privacy Policy
+                    </ons-list-item>
+                    <ons-list-item ng-click="loadPage('mechView/home.html')" ng-if="userLoggedin && user.type == 'mechanic'" tappable>
+                        Home
+                    </ons-list-item>
+                    <ons-list-item ng-click="loadPage('mechView/appointments.html')" ng-if="userLoggedin && user.type == 'mechanic'" tappable>
+                        Notifications
+                    </ons-list-item>
+                    <ons-list-item ng-click="loadPage('mechView/scheduledAppointments.html')" ng-if="userLoggedin && user.type == 'mechanic'" tappable>
+                        Scheduled Appointments
+                    </ons-list-item>
+                    <ons-list-item ng-click="inspectionsReport()" ng-if="userLoggedin && user.type == 'mechanic'" tappable>
+                        Inspections
+                    </ons-list-item>
+                    <ons-list-item ng-click="loadPage('mechView/promoteYourself.html')" ng-if="userLoggedin && user.type == 'mechanic'" tappable>
+                        Promote Yourself
+                    </ons-list-item>
+                    <ons-list-item ng-click="loadPage('mechView/settings.html')" ng-if="userLoggedin && user.type == 'mechanic'" tappable>
+                        Settings
+                    </ons-list-item>
+                    <ons-list-item ng-click="logout()" ng-if="userLoggedin" tappable>
+                        Logout
+                    </ons-list-item>
+                </ons-list>
+                <div style="padding: 10px 30px;">
+                    <p><small>© CarsOne100</small></p>
+                    <ons-row>
+                        <ons-col style="text-align: center;"><a href="mailto:support@carsone100.com" target="_blank"><ons-icon size="30px" icon="fa-envelope" class="circleIcon"></ons-icon></a></ons-col>
+                        <ons-col style="text-align: center;"><a href="https://www.facebook.com/carsone100/" target="_blank"><ons-icon size="30px" icon="fa-facebook" class="circleIcon"></ons-icon></a></ons-col>
+                        <ons-col style="text-align: center;"><a href="https://twitter.com/carsone100" target="_blank"><ons-icon size="30px" icon="fa-twitter" class="circleIcon"></ons-icon></a></ons-col>
+                    </ons-row>
+                </div>
+            </ons-page>
+            </ons-splitter-side>
+            <ons-splitter-content>
+                <ons-navigator title="Navigator" var="appNav" >
+                    <ons-page modifier="BodyHome">
+                        <p style="text-align: center; padding: 10px 30px;"><img src="images/logo.jpg" alt="logo" style="width: 100%; max-width: 800px;" /></p>
+                        <h4 style="background-color: #ab0019; color: #fff; padding: 20px 30px; font-weight: normal; text-align: center">LOADING...</h4>
+                        <div id="mapActions" style="text-align: center;">
+                            Brought to you by <br><img src="images/dynLogo.png" alt="logo" />
+                        </div>
+                        <div ng-init="init()">
+                        </div>
+                    </ons-page>
+                </ons-navigator>
+            </ons-splitter-content>
+        </ons-splitter>
+        <ons-modal var="myModal" direction="up">
+            <div style="text-align: center">
+                <p>
+                    <ons-icon icon="md-spinner" size="28px" spin></ons-icon> Loading...
+                </p>
+            </div>
+        </ons-modal>
+    </body>
+</html>

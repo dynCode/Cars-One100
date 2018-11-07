@@ -1,0 +1,60 @@
+<ons-page>
+    <div style="background-color: #ab0019; height: 100px; color: #fff; text-align: center;position: relative; z-index: 2;">
+        <ons-row>
+            <ons-col width="20px"></ons-col>
+            <ons-col style="color: #fff; text-align: left; line-height: 100px;">
+                Please Select
+            </ons-col>
+            <ons-col style="color: #fff; text-align: right;"><ons-icon icon="fa-times" ng-click="loadPage('home.html')" style="padding: 10px;"></ons-icon></ons-col>
+        </ons-row>
+    </div>
+    <div style="padding: 20px 30px;">
+        <p>Select Date & Time:</p>
+        <ons-row>
+            <ons-col style="border-top: 1px solid #333; border-right: 1px solid #333; padding: 5px 2px">
+                <div moment-picker="rsvpConfimApp.datepicker" format="YYYY-MM-DD">
+                    <ons-icon icon="ion-calendar" size="30px" style="color: #ab0019;"></ons-icon> {{ rsvpConfimApp.datepicker || 'Select Date' }} 
+                </div>
+            </ons-col>
+            <ons-col style="border-top: 1px solid #333; padding: 5px">
+                <div moment-picker="rsvpConfimApp.timepicker" format="HH:mm">
+                    <ons-icon icon="ion-clock" size="30px" style="color: #ab0019;"></ons-icon> {{ rsvpConfimApp.timepicker || 'Select Time' }} 
+                </div>
+            </ons-col>
+        </ons-row>
+        <p><br></p>
+        <div style="padding: 10px; background-color: #f1f1f1">
+            <p>Standard Inspection includes:</p>
+            <ul>
+                <li>The Cars One100 80-point inspection</li>
+                <li>Vehicle Diagnostics Report</li>
+                <li>LightStone Vehicle History Report</li>
+            </ul>
+        </div>
+    </div>
+    <div style="padding: 10px 30px;">
+        <!--<div class="segment segment--material" style="width: 100%; margin: 0 auto;height: 150px;">
+            <div class="segment__item segment--material__item">
+                <input type="radio" class="segment__input segment--material__input" ng-model="rsvpConfimApp.warranty" value="false" name="segment-b" checked>
+                <div class="segment__button segment--material__button" style="height: 100%;">
+                    <img src="images/inspectIcon.png" style="width: 25%;"><br>
+                    <h4><sup>R</sup>550</h4>
+                </div>
+            </div>
+            <div class="segment__item segment--material__item">
+                <input type="radio" class="segment__input segment--material__input" ng-model="rsvpConfimApp.warranty" value="true" name="segment-b">
+                <div class="segment__button segment--material__button" style="height: 100%;">
+                    <img src="images/warrantyIcon.png" style="width: 25%;"><br>
+                    Inspection & warranty
+                    <h4><sup>R</sup>1100</h4>
+                </div>
+            </div
+        </div>-->
+        <div style="background-color: #f1f1f1; text-align: center;">
+            <img src="images/inspectIcon.png" style="width: 25%;">
+            <h2><sup>R</sup>770</h2>
+        </div>
+        <p><ons-button modifier="large" ng-click="awaitRSVPResponse()" style="background-color: #333;height: 50px;line-height: 50px;">Confirm Inspection</ons-button></p>
+        <p><ons-button modifier="large--quiet" ng-click="loadPage('home.html')">Cancel Request</ons-button></p>
+    </div>
+</ons-page>

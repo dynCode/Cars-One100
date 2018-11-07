@@ -1,0 +1,61 @@
+<ons-page>
+    <div style="padding: 20px 30px;">
+        <div ng-if="assessment.length > 1">
+            <ons-list ng-repeat="(key, value) in assessment">
+                <ons-list-header ng-if="key == 0">
+                    <ons-row>
+                        <ons-col width="70%"><h4>{{value}}</h4></ons-col>
+                        <ons-col width="10%" style="padding-top: 13px;margin-left: -5px;"><img src="images/pass.png" alt="Assessment" width="20px" /></ons-col>
+                        <ons-col width="10%" style="padding-top: 13px;"><img src="images/fail.png" alt="Assessment" width="20px" /></ons-col>
+                        <ons-col width="10%"></ons-col>
+                    </ons-row>
+                </ons-list-header>
+                <ons-list-item ng-if="key > 0">
+                    <ons-row>
+                        <ons-col width="70%">
+                            {{value.substring(3)}}
+                        </ons-col>
+                        <ons-col width="10%">
+                            <input type="hidden" name="Price" ng-init="assessmentDone.results[key].desc=value.substring(3);" ng-value="assessmentDone.results[key].desc"/>
+                            <ons-radio input-id="radio-1" modifier="material" ng-model="assessmentDone.results[key].pass" value="1" name="pass[{{key}}]"></ons-radio>
+                        </ons-col>
+                        <ons-col width="10%"><ons-radio input-id="radio-2"  modifier="material" ng-model="assessmentDone.results[key].pass" value="0" name="pass[{{key}}]"></ons-radio></ons-col>
+                        <ons-col width="10%"><img src="images/comment.png" alt="Assessment" ng-click="assessmentComment(key)"></ons-col>
+                    </ons-row>
+                </ons-list-item>
+            </ons-list>
+        </div>
+        <div ng-if="assessment.length == 1">
+            <ons-list ng-repeat="(key, value) in assessment">
+                <ons-list-header>
+                    <ons-row>
+                        <ons-col width="70%"><h4>{{value}}</h4></ons-col>
+                        <ons-col width="10%" style="padding-top: 13px;margin-left: -5px;"><img src="images/pass.png" alt="Assessment" width="20px" /></ons-col>
+                        <ons-col width="10%" style="padding-top: 13px;"><img src="images/fail.png" alt="Assessment" width="20px" /></ons-col>
+                        <ons-col width="10%"></ons-col>
+                    </ons-row>
+                </ons-list-header>
+                <ons-list-item>
+                    <ons-row>
+                        <ons-col width="70%">
+                            {{value}}
+                        </ons-col>
+                        <ons-col width="10%">
+                            <input type="hidden" name="Price" ng-init="assessmentDone.results[key].desc=value;" ng-value="assessmentDone.results[key].desc"/>
+                            <ons-radio input-id="radio-1" modifier="material" ng-model="assessmentDone.results[key].pass" value="1" name="pass[{{key}}]"></ons-radio>
+                        </ons-col>
+                        <ons-col width="10%"><ons-radio input-id="radio-2"  modifier="material" ng-model="assessmentDone.results[key].pass" value="0" name="pass[{{key}}]"></ons-radio></ons-col>
+                        <ons-col width="10%"><img src="images/comment.png" alt="Assessment" ng-click="assessmentComment(key)"></ons-col>
+                    </ons-row>
+                </ons-list-item>
+            </ons-list>
+        </div>
+    </div>
+    <!--<div style="padding: 20px; text-align: center"><img src="images/{{assessmentCurPage}}-g.png" alt="Assessment" /></div>-->
+    <ons-row style="padding: 0px 30px;">
+        <ons-col width="80%" style="background-color: #f2f2f2; padding-left:10px">
+            <p>Step <strong>{{assessmentCurPage}}</strong> of 21</p>
+        </ons-col>
+        <ons-col><ons-fab ng-click="assesmentPage(assessmentNextPage)" style="transform: scale(2);"><ons-icon icon="fa-arrow-right"></ons-icon></ons-fab></ons-col>
+    </ons-row>
+</ons-page>

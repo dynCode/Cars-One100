@@ -1,0 +1,30 @@
+<ons-page>
+    <div style="background-color: #ab0019; height: 100px; color: #fff; text-align: center;position: relative; z-index: 2;">
+        <ons-row>
+            <ons-col width="20px"></ons-col>
+            <ons-col style="color: #fff; text-align: left; line-height: 100px;">
+                <h3>Settings</h3>
+            </ons-col>
+            <ons-col style="color: #fff; text-align: right;"><ons-icon icon="fa-times" ng-click="loadPage('home.html')" style="padding: 10px;"></ons-icon></ons-col>
+        </ons-row>
+    </div>
+    <div style="background-color: #f2f2f2;" ng-if="userLoggedin">
+        <ons-row>
+            <ons-col width="100px"><img src="images/mechIcon.png" alt="mechFace" style="width: 80px; padding: 10px;" ></ons-col>
+            <ons-col style=" text-align: left; padding-top: 20px">
+                {{user.firstName}} {{user.lastName}}<br>
+                {{user.cellNo}}<br>
+                {{user.userID}}
+            </ons-col>
+        </ons-row>
+    </div>
+    <div class="pagecontent">
+        Other details
+    </div>
+    <section id="mapActions">
+        <hr>
+        <ons-button modifier="quiet" ng-click="logout()">
+            Sign Out
+        </ons-button>
+    </section>
+</ons-page>

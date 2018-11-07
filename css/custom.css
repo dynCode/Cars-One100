@@ -1,0 +1,127 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Apr 12, 2018, 3:37:39 PM
+    Author     : Llewellyn
+*/
+body {
+    font-family: -apple-system, 'Helvetica Neue', 'Helvetica', 'Arial', 'Lucida Grande', sans-serif;
+}
+
+.page {
+    font-family: -apple-system, 'Helvetica Neue', 'Helvetica', 'Arial', 'Lucida Grande', sans-serif;
+    font-weight: 400;
+    color: #333333;
+}
+
+.circleIcon {
+    border: 1px solid #ab0019;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 35px;
+    vertical-align: middle;
+    padding: 3px;
+    color: #ab0019;
+}
+
+.circleLrgIcon {
+    border: 2px solid #ab0019;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 70px;
+    vertical-align: middle;
+    padding: 6px;
+    color: #ab0019;
+}
+
+#splashImg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 500px;
+    height: 500px;
+    margin-top: -250px; /* Half the height */
+    margin-left: -250px; /* Half the width */
+}
+
+.toolbar {
+    border: none;
+    box-shadow: none;
+    background-color: transparent;
+}
+
+.text-input--material:focus {
+    background-image: linear-gradient(#ab0019, #ab0019), linear-gradient(to top, transparent 1px, #afafaf 1px);
+}
+
+.text-input--material__label--active {
+    color: #ab0019;
+}
+
+div#map-container {
+    width: 100%; 
+    height: 100%; 
+    position: relative; 
+    color: rgb(86, 86, 86); 
+    font-family: Roboto, Arial, sans-serif; 
+    -webkit-user-select: none; 
+    font-size: 11px; 
+}
+
+ng-map {
+    display:block; 
+    width:100%; 
+    height:100%;
+}
+
+#mapActions {
+    position: absolute;
+    bottom: 0;
+    margin: 20px;
+    width: 90%;
+}
+
+#mapPage .toolbar+.page__background+.page__content {
+    top: 0 !important;
+    padding-top: 0;
+}
+
+.button--largeFront {
+    padding: 10px;
+    border-radius: 0px;
+    width: 100%;
+    font-size: 16px;
+}
+
+ons-toast .toast {
+    pointer-events: auto;
+    background-color: #ab0019;
+    line-height: 40px;
+}
+
+.pagecontent {
+    padding: 5px 25px;
+}
+
+.alert-dialog-title {
+    font-weight: bold;
+}
+
+.my-custom-stars .button .material-icons {
+    font-size: 50px; 
+}
+
+.my-custom-stars .star-button.star-on .material-icons {
+    color: #ab0019; 
+}
+
+.fab--makeBigger {
+    transform: scale(1.3) !important;
+}

@@ -1,0 +1,15 @@
+<ons-page>
+    <ons-toolbar>
+        <div class="left"><ons-back-button></ons-back-button></div>
+    </ons-toolbar>
+    <div style="text-align: center; padding: 20px 30px;">
+        <p>
+            <ons-input id="telnum" type="number" value="+27" modifier="underbar material" placeholder="Enter your number" float ng-model="signUp.telnumber" style="width: 100%; padding: 20px 0;"></ons-input>
+        </p>
+    </div>
+    <div style="padding: 0px 30px; text-align: right;">
+        <p><ons-fab modifier="makeBigger" ng-click="completeRegister()"><ons-icon icon="fa-arrow-right"></ons-icon></ons-fab> </p>
+    </div>
+    <div style="text-align: center; font-size: 14px; color: #C82026;">Already signed-up?  <span ng-click="appNav.pushPage('login.html', { animation : 'fade' })"><strong>LOGIN</strong></span></div>
+    <p>&nbsp;</p>
+</ons-page>

@@ -1,0 +1,21 @@
+<ons-page>
+    <div style="background-color: #ab0019; height: 100px; color: #fff; text-align: center;position: relative; z-index: 2;">
+        <ons-row>
+          <ons-col width="20px"></ons-col>
+          <ons-col style="color: #fff; text-align: left; line-height: 100px;">
+              Inspections
+          </ons-col>
+          <ons-col style="color: #fff; text-align: right;"><ons-icon icon="fa-times" ng-click="loadPage('mechView/home.html')" style="padding: 10px;"></ons-icon></ons-col>
+        </ons-row>
+    </div>
+    <div  ng-if="user.inspections.length > 0">
+        <ons-list ng-repeat="assessment in user.inspections" style="background-color: #f2f2f2">
+            <ons-list-item modifier="chevron" tappable>
+                {{assessment.complete}}<br>
+                {{assessment.date}}<br>
+                {{assessment.name}} {{assessment.surname}}
+            </ons-list-item>
+        </ons-list>
+    </div>
+    <h4 ng-if="user.inspections.length === 0">No Inspections available!</h4>
+</ons-page>

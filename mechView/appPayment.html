@@ -1,0 +1,15 @@
+<ons-page>
+    <div style="padding: 20px 30px;">
+        <p>
+            <ons-input id="invoice" modifier="underbar material" placeholder="Invoice code" float ng-model="payment.invoice" style="width: 100%; padding: 20px 0;" ></ons-input>
+        </p>
+        <p>
+            <ons-input id="deviceNum" modifier="underbar material" placeholder="Card device number" float ng-model="payment.deviceNum" style="width: 100%; padding: 20px 0;" ></ons-input>
+        </p>
+        <p>
+            <ons-input id="sellerNum" modifier="underbar material" placeholder="Seller’s Phone number" float ng-model="payment.sellerNum" style="width: 100%; padding: 20px 0;" ></ons-input>
+        </p>
+        <p style="text-align: center"><img src="images/Payment.png" alt="Payment" /></p>
+        <ons-button modifier="largeFront" ng-click="toAssessment()">Commence Assessment</ons-button>
+    </div>
+</ons-page>

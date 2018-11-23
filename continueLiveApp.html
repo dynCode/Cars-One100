@@ -1,49 +1,3 @@
-<!--<ons-page>
-    <ons-toolbar style="background-color: #ab0019;">
-        <div class="left">
-            <ons-toolbar-button ng-click="openMenu()">
-                <ons-icon icon="md-menu" style="color: #fff;"></ons-icon>
-            </ons-toolbar-button>
-        </div>
-    </ons-toolbar>
-    <div style="background-color: #ab0019; height: 100px; color: #fff; text-align: center;position: relative; z-index: 2;">
-        <ons-row>
-          <ons-col width="100px"><ons-icon size="90px" icon="md-face" style="color: #fff;"></ons-icon></ons-col>
-          <ons-col style="color: #fff; text-align: left;">
-              {{liveConfimApp.mechName}}<br>
-              {{liveConfimApp.carMake}}<br>
-              {{liveConfimApp.regNo}}
-          </ons-col>
-        </ons-row>
-    </div>
-    <div style="padding: 20px 30px;">
-        <div style="padding: 10px; background-color: rgba(255,255,255,0.7);">
-            <p>Standard Inspection includes:</p>
-            <ul>
-                <li>The Cars One100 80-point inspection</li>
-                <li>Vehicle Diagnostics Report</li>
-                <li>LightStone Vehicle History Report</li>
-            </ul>
-        </div>
-    </div>
-    <div id="map-container" ng-controller="mapController" style="margin-top: -100px">
-        <ng-map default-style="false" center="current-location"  disable-default-u-i="true" zoom="14" geo-fallback-center="[-25.7585829, 28.057867]" geo-callback="callbackFunc('you')">
-            <marker position="current-position" title="Yoe are here"></marker>
-        </ng-map>
-        <section id="mapActions" style="margin: 0px; width: 100%;background: #fff;padding: 20px;">
-            <div class="segment segment--material" style="width: 100%; margin: 0 auto;height: 150px;">
-                <div class="segment__item segment--material__item">
-                    <input type="radio" class="segment__input segment--material__input" ng-model="liveConfimApp.warranty" value="False" name="segment-b" checked>
-                    <div class="segment__button segment--material__button" style="height: 100%;">
-                        <img src="images/inspectIcon.png" style="width: 25%;"><br>
-                        <h4><sup>R</sup>550</h4>
-                    </div>
-                </div>
-            </div>
-            <ons-button modifier="large" ng-click="acceptAppCustomer()" style="background-color: #000;">Confirm Inspection</ons-button>
-        </section>
-    </div>
-</ons-page>-->
 <ons-page>
     <ons-toolbar style="background-color: #ab0019;">
         <div class="left">
@@ -52,10 +6,10 @@
             </ons-toolbar-button>
         </div>
     </ons-toolbar>
-    <div style="background-color: #ab0019; height: 100px; color: #fff; text-align: center;position: relative; z-index: 2;">
+    <div style="background-color: #ab0019; height: 100px; color: #fff; text-align: center;position: relative; z-index: 2;" ng-init="checkMechCan(liveConfimApp.appointID)">
         <ons-row>
-          <ons-col width="100px" style="color: #fff; text-align: right;"><img src="images/mechIcon.png" alt="mechFace" style="width: 80px; padding: 10px;" ></ons-col>
-          <ons-col style="color: #fff; text-align: left;">
+          <ons-col width="100px" style="color: #fff; text-align: right;"><img ng-src="{{liveConfimApp.mechImageURL}}" alt="mechFace" style="width: 80px; padding: 10px;" ></ons-col>
+          <ons-col style="color: #fff; text-align: left; padding: 10px;">
               {{liveConfimApp.mechName}}<br>
               {{liveConfimApp.carMake}}<br>
               {{liveConfimApp.regNo}}
@@ -73,15 +27,6 @@
         </div>
     </div>
     <div style="padding: 20px;">
-        <!--<div class="segment segment--material" style="width: 100%; margin: 0 auto;height: 150px;">
-            <div class="segment__item segment--material__item">
-                <input type="radio" class="segment__input segment--material__input" ng-model="liveConfimApp.warranty" value="false" name="segment-b" checked>
-                <div class="segment__button segment--material__button" style="height: 100%;">
-                    <img src="images/inspectIcon.png" style="width: 25%;">
-                    <h4 style="margin: -5px;"><sup>R</sup>550</h4>
-                </div>
-            </div>
-        </div>-->
         <div style="background-color: #f2f2f2; text-align: center;">
             <img src="images/inspectIcon.png" style="width: 25%;">
             <h2><sup>R</sup>770</h2>

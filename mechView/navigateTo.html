@@ -1,18 +1,17 @@
 <ons-page>
-    <ons-toolbar style="background-color: #ab0019;">
-        <div class="left">
-            <!--<ons-toolbar-button ng-click="openMenu()">
-                <ons-icon icon="md-menu" style="color: #fff;"></ons-icon>
-            </ons-toolbar-button>-->
-        </div>
-    </ons-toolbar>
-    
+    <div style="background-color: #ab0019; height: 100px; margin-bottom: -100px; color: #fff; text-align: center;position: relative; z-index: 2;" ng-init="checkMechCan(liveConfimApp.appointID)">
+        <ons-row>
+            <ons-col style="color: #fff; text-align: left; padding: 10px;">
+                <strong>Appointment with:</strong><br>{{liveAcceptedApp.custName}}@{{liveAcceptedApp.address}}
+            </ons-col>
+        </ons-row>
+    </div>
     <div id="map-container" ng-controller="mapMechController">
-        <ng-map default-style="false" center="current-location"  disable-default-u-i="true" zoom="14" geo-fallback-center="[-25.7585829, 28.057867]" geo-callback="callbackFunc('you')" >
+        <ng-map default-style="false" center="current-location" disable-default-u-i="true" zoom="14" geo-fallback-center="[-25.7585829, 28.057867]" geo-callback="callbackFunc('you')" >
             <marker position="current-position" title="You are here"></marker>
         </ng-map>
-        <ons-fab style="position: absolute; top: 10px; right: 10px;">
-            <a ng-href="call:{{liveAcceptedApp.userCell}}" style="text-decoration: none; color:#fff"><ons-icon icon="md-phone"></ons-icon></a>
+        <ons-fab style="position: absolute; top: 110px; right: 10px;">
+            <a ng-href="tel:{{liveAcceptedApp.userCell}}" style="text-decoration: none; color:#fff"><ons-icon icon="md-phone"></ons-icon></a>
         </ons-fab>
         <section id="mapActions">
             <ons-button modifier="large" ng-click="getDirectionTo(liveAcceptedApp.appointID, liveAcceptedApp.address)" ng-if="!directionsStart">Start Navigation</ons-button>

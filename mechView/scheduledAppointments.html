@@ -11,6 +11,7 @@
         </ons-row>
     </div>
     <div style="padding: 20px 30px;">
+        <h5>Unconfirmed Appointments</h5>
         <div  ng-if="curAppointmentList.length > 0">
             <ons-list ng-repeat="appointmentList in curAppointmentList">
                 <ons-list-item modifier="chevron" tappable ng-click="viewRsvpApp(appointmentList.appointID)">
@@ -20,7 +21,7 @@
                 </ons-list-item>
             </ons-list>
         </div>
-        <h4 ng-if="curAppointmentList.length === 0">No new scheduled appointments available!</h4>
+        <p ng-if="curAppointmentList.length === 0">No new unconfirmed appointments available!</p>
         <hr>
         <h5>My Scheduled Appointments</h5>
         <div  ng-if="curAppointmentAList.length > 0">
@@ -32,6 +33,6 @@
                 </ons-list-item>
             </ons-list>
         </div>
-        <h4 ng-if="curAppointmentAList.length === 0">No scheduled appointments accepted!</h4>
+        <p ng-if="curAppointmentAList.length === 0">No scheduled appointments accepted!</p>
     </div>
 </ons-page>

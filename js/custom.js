@@ -20,10 +20,30 @@ module.factory('AppShareData', function(){
     };
 });
 
+module.factory('imgUtils', function($q) {
+    return {
+        isImage: function(src) {
+        
+            var deferred = $q.defer();
+        
+            var image = new Image();
+            image.onerror = function() {
+                deferred.resolve(false);
+            };
+            image.onload = function() {
+                deferred.resolve(true);
+            };
+            image.src = src;
+        
+            return deferred.promise;
+        }
+    };
+});
+
 module.config(['momentPickerProvider', function (momentPickerProvider) {
     momentPickerProvider.options({
         /* Picker properties */
-        locale:        'en',
+        locale:        'en-gb',
         format:        'L LT',
         minView:       'month',
         maxView:       'hour',
@@ -39,16 +59,16 @@ module.config(['momentPickerProvider', function (momentPickerProvider) {
         monthsFormat:  'MMM',
         daysFormat:    'D',
         hoursFormat:   'HH:[00]',
-        hoursStart:   '7',
-        hoursEnd:     '19',
-        minutesFormat: moment.localeData().longDateFormat('LT').replace(/[aA]/, ''),
+        hoursStart:    '7',
+        hoursEnd:      '19',
         minutesStep:   15
     });
 }]);
 
-module.controller('AppController', function($scope, $timeout, $http, NgMap, AppShareData, $interval, $window, Upload) {
+module.controller('AppController', function($scope, $timeout, $http, NgMap, AppShareData, $interval, $window, Upload, imgUtils) {
     var apiURL = "https://carsone100.com/app/api/apiCalls.php";
     var apiKey = "5b8548dfb0e0520b80d13fca";
+    var timerLRCId;
 
     // app define scope data
     $scope.signUp = [];
@@ -62,6 +82,7 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
     $scope.login.keepLoggedIn = true;
     $scope.login.updates = true;
     $scope.appNotifyShown = false;
+    $scope.appNotifyShownIds = [];
     
     // Appointment Data
     $scope.myAppointID = "";
@@ -119,6 +140,15 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
                     $scope.user.firstName = data.data.html.firstName;
                     $scope.user.lastName = data.data.html.lastName;
                     $scope.user.type = data.data.html.type;
+                    
+                    imgUtils.isImage(data.data.html.imageURL).then(function(result) {
+                        if (result) {
+                            $scope.user.img = data.data.html.imageURL;
+                        } else {
+                            $scope.user.img = "images/mechIcon.png";
+                        }
+                    });
+                    
                     $scope.data.errorIcon = 'md-spinner';
                     $scope.data.errorIconSpin = true;
                     $scope.data.errorCode = 'Loading...';
@@ -165,7 +195,7 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
                                             appNav.pushPage('rateMech.html', { animation : 'fade' });
                                         } else {
                                             ons.notification.alert("Hmmm... Something did not work as accepted.");
-                                            appNav.pushPage('home.html', { animation : 'fade' });
+                                            appNav.resetToPage('home.html', { animation : 'fade' });
                                         }
                                     }
                                 },function(data) {
@@ -176,7 +206,7 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
                             },'2000');
                         } else {
                             $timeout(function(){
-                                appNav.pushPage('home.html', { animation : 'fade' });
+                                appNav.resetToPage('home.html', { animation : 'fade' });
                             },'2000');
                         }
                     } else if ($scope.user.type === 'mechanic') {
@@ -213,6 +243,7 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
                                         $scope.liveAcceptedApp.mechID = result.mechID;
                                         $scope.liveAcceptedApp.mechName = result.mechName;
                                         $scope.liveAcceptedApp.userCell = result.userCell;
+                                        $scope.liveAcceptedApp.custName = result.custName;
                                         $scope.liveAcceptedApp.regNo = result.regNo;
                                         $scope.liveAcceptedApp.status = result.status;
                                         
@@ -346,6 +377,10 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
             ons.notification.alert(message);
         } else if ($scope.signUp.password !== $scope.signUp.password2) {
             var message = "Passwords did not match, please enter passwords carefully.";
+            myModal.hide();
+            ons.notification.alert(message);
+        } else if (!$scope.signUp.tandc) {
+            var message = "Please accept the Terms and Conditions, Terms of Service and Privacy Policy, before you can register.";
             myModal.hide();
             ons.notification.alert(message);
         } else {
@@ -500,24 +535,34 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
     $scope.liveRequestCountdown = function() {
         var countdown = 120;
         var AppApproved = 0;
-        var timerId = setInterval(function(){
-            
-            if (countdown == 0) {
-                clearInterval(timerId);
+        timerLRCId = setInterval(function(){
+            if (countdown === 0) {
+                clearInterval(timerLRCId);
                 if (AppApproved === 1) {
                     appNav.pushPage('continueLiveApp.html', { animation : 'fade' });
                     console.log("Appointment Details: ", $scope.liveConfimApp);
+                } else if (AppApproved === 2) {
+                    
                 } else {
                     var message = "Appointment not confirmed";
-                    ons.notification.alert(message);
-                    appNav.pushPage('scheduleApp.html', { animation : 'fade' });
+                    
+                    $http.post(apiURL, {
+                        'reqType': 'appointmentCancel',
+                        'appointID': $scope.myAppointID})
+                    .then(function(data){
+                        ons.notification.alert(message);
+                        appNav.pushPage('scheduleApp.html', { animation : 'fade' });
+                    },function(data) {
+                        console.log("Func Data:", data);
+                    });
                 }
-               
             } else {      
                 document.getElementById("liveWait").innerHTML = countdown;
+                //$scope.liveWait = countdown;
                 // get list of appoint
                 var remainder = countdown % 2;
-                if (remainder == 0){
+                if (remainder === 0){
+                    console.log("IgotHere!!")
                     // get list of appoint
                     $http.post(apiURL, {
                         'reqType': 'appointmentRead',
@@ -537,12 +582,21 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
                             $scope.liveConfimApp.date = result.time;
                             $scope.liveConfimApp.inspectionOnly = result.mechInspectionOnly;
                             $scope.liveConfimApp.inspectionWarranty = result.mechInspectionWarranty;
-                            $scope.liveConfimApp.mechID = result.mechID;
+                            $scope.liveConfimApp.mechID = result.mechanic;
                             $scope.liveConfimApp.mechName = result.mechName;
                             $scope.liveConfimApp.mechCell = result.mechCell;
                             $scope.liveConfimApp.regNo = result.mechReg;
                             $scope.liveConfimApp.status = result.status;
                             $scope.liveConfimApp.userCell = result.userCell;
+                            
+                            imgUtils.isImage(result.mechImageURL).then(function(imgresult) {
+                                if (imgresult) {
+                                    $scope.liveConfimApp.mechImageURL = result.mechImageURL;
+                                } else {
+                                    $scope.liveConfimApp.mechImageURL = "images/mechIcon.png";
+                                }
+                            });
+                            
                             $scope.liveConfimApp.warranty = false;
                             $scope.liveConfimApp.selectType = true;
                             AppApproved = 1;
@@ -570,6 +624,7 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
             $scope.rsvpConfimApp.address = $scope.rsvpConfimApp.curLocation;
         }
         $scope.rsvpConfimApp.warranty = false;
+        $scope.rsvpConfimApp.NowDate = new Date().toJSON().slice(0, 10);
         appNav.pushPage('continueRSVP.html', { animation : 'fade' });
     };
     
@@ -666,6 +721,45 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
                         });
                     }
                 }, 2000);
+            } else if (navStarted === 2) {
+                clearInterval(timerId);
+                ons.notification.alert({
+                    message: "The Appointment was cancelled!",
+                    title: 'Cancelled!',
+                    buttonLabel: 'Continue',
+                    animation: 'default',
+                    callback: function() {
+                        //$scope.liveWait = "120";
+
+                        // Appointment Data
+                        $scope.myAppointID = "";
+                        $scope.liveConfimApp = [];
+                        $scope.rsvpConfimApp = [];
+
+                        // mechanic data
+                        $scope.curAppointmentList = [];
+                        $scope.curAppointmentAList = [];
+                        $scope.NewAddress = "";
+                        $scope.liveAcceptedApp = [];
+                        $scope.rsvpAcceptedApp = [];
+                        $scope.directionsStart = false;
+                        $scope.payment = [];
+                        $scope.assessment = [];
+                        $scope.assessmentPage = 0;
+                        $scope.assessmentNextPage = 0;
+                        $scope.assessmentPrePage = 0;
+                        $scope.assessmentDone = [];
+                        
+                        $window.localStorage.removeItem('appointID'); 
+                        $window.localStorage.removeItem('assessmentCurPage');
+                        
+                        if ($scope.user.type === 'customer') {
+                            appNav.resetToPage('home.html', { animation : 'fade' });
+                        } else if ($scope.user.type === 'mechanic') {
+                            appNav.resetToPage('mechView/home.html', { animation : 'fade' });
+                        }
+                    }
+                });
             } else {      
                 $http.post(apiURL, {
                     'reqType': 'appointmentRead',
@@ -676,6 +770,8 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
                     console.log("Nav app read", result);
                     if (result.navStarted) {
                         navStarted = 1;
+                    } else if (result.status == 'cancelled') {
+                        navStarted = 2;
                     }
                 },function(data) {
                     console.log("Func Data:", data);
@@ -732,7 +828,7 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
                     if (compDate >= nowDate) {
                         $scope.curAppointmentList.push(result[i]);
                     }
-                } else if (result[i].mechanic === $scope.user.userID && result[i].status === "accepted" && result[i].type === "scheduled") {
+                } else if (result[i].mechanic === $scope.user.userID && result[i].status === "accepted" && result[i].type === "scheduled" && !result[i].assessment_done) {
                     $scope.curAppointmentAList.push(result[i]);
                 }
             } 
@@ -756,12 +852,12 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
             $scope.myAppointID = appId;
             console.log("Appointment Confirmed DATA: ", data.data.html);
             myModal.hide();
-            var message = "Appointment Confirmed, please stand by!";
-            ons.notification.alert(message);
             if (data.data.html.type === "scheduled") {
                 $scope.viewRsvpApp(appId);
                 //appNav.pushPage('mechView/home.html', { animation : 'fade' });
             } else {
+                var message = "Appointment Confirmed, please stand by!";
+                ons.notification.alert(message);
                 appNav.pushPage('mechView/appointmentWait.html', { animation : 'fade' });
             }
         },function(data) {
@@ -792,9 +888,10 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
         });
     };
     
-    // User wait for meck to accept RSVP appointment
+    // User wait for mech to accept RSVP appointment
     $scope.AppointmentMechWaitRSVP = function () {
         var AppConfirmed = 0;
+        $scope.rsvpConfimApp = [];
         var timerId = setInterval(function(){
             
             if (AppConfirmed == 1) {
@@ -808,7 +905,7 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
                 } else {
                     var message = "Appointment Cancelled";
                     ons.notification.alert(message);
-                    appNav.pushPage('home.html', { animation : 'fade' });
+                    appNav.resetToPage('home.html', { animation : 'fade' });
                 }
             } else {
                 $http.post(apiURL, {
@@ -852,11 +949,33 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
                     console.log("Appointment Details: ", $scope.liveAcceptedApp);
                     $window.localStorage.setItem('assessmentCurPage','navTo'); 
                     $window.localStorage.setItem('appointID',$scope.liveAcceptedApp.appointID );
+                    $scope.stopRequestLookup();
                     appNav.pushPage('mechView/navigateTo.html', { animation : 'fade' });
                 } else {
+                    // Appointment Data
+                    $scope.myAppointID = "";
+                    $scope.liveConfimApp = [];
+                    $scope.rsvpConfimApp = [];
+
+                    // mechanic data
+                    $scope.curAppointmentList = [];
+                    $scope.curAppointmentAList = [];
+                    $scope.NewAddress = "";
+                    $scope.liveAcceptedApp = [];
+                    $scope.rsvpAcceptedApp = [];
+                    $scope.directionsStart = false;
+                    $scope.payment = [];
+                    $scope.assessment = [];
+                    $scope.assessmentPage = 0;
+                    $scope.assessmentNextPage = 0;
+                    $scope.assessmentPrePage = 0;
+                    $scope.assessmentDone = [];
+
+                    $window.localStorage.removeItem('appointID'); 
+                    $window.localStorage.removeItem('assessmentCurPage');
                     var message = "Appointment Cancelled";
                     ons.notification.alert(message);
-                    appNav.pushPage('mechView/home.html', { animation : 'fade' });
+                    appNav.resetToPage('mechView/home.html', { animation : 'fade' });
                 }
                
             } else {      
@@ -878,6 +997,7 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
                         $scope.liveAcceptedApp.mechID = result.mechID;
                         $scope.liveAcceptedApp.mechName = result.mechName;
                         $scope.liveAcceptedApp.userCell = result.userCell;
+                        $scope.liveAcceptedApp.custName = result.custName;
                         $scope.liveAcceptedApp.regNo = result.regNo;
                         $scope.liveAcceptedApp.status = result.status;
                         AppConfirmed = 1;
@@ -887,6 +1007,72 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
                 });
             }
         }, 1000);
+    };
+    
+    // user check if appointment was cancelled
+    $scope.checkMechCan = function (appID) {
+        var AppCanned = 0;
+        var timerId = setInterval(function(){
+            
+            if (AppCanned == 1) {
+                clearInterval(timerId);
+                if ($scope.liveAcceptedApp.status === "cancelled") {
+                    // Appointment Data
+                    $scope.myAppointID = "";
+                    $scope.liveConfimApp = [];
+                    $scope.rsvpConfimApp = [];
+
+                    // mechanic data
+                    $scope.curAppointmentList = [];
+                    $scope.curAppointmentAList = [];
+                    $scope.NewAddress = "";
+                    $scope.liveAcceptedApp = [];
+                    $scope.rsvpAcceptedApp = [];
+                    $scope.directionsStart = false;
+                    $scope.payment = [];
+                    $scope.assessment = [];
+                    $scope.assessmentPage = 0;
+                    $scope.assessmentNextPage = 0;
+                    $scope.assessmentPrePage = 0;
+                    $scope.assessmentDone = [];
+
+                    $window.localStorage.removeItem('appointID'); 
+                    $window.localStorage.removeItem('assessmentCurPage');
+                    var message = "Appointment Cancelled by mechanic";
+                    ons.notification.alert(message);
+                    appNav.resetToPage('home.html', { animation : 'fade' });
+                } else if ($scope.liveAcceptedApp.status === "accepted") {
+                    clearInterval(timerId);
+                }
+            } else {      
+                
+                $http.post(apiURL, {
+                    'reqType': 'appointmentRead',
+                    'key': apiKey,
+                    'appointID': appID})
+                .then(function(data){
+                    var result = data.data.html;
+                    if (result.status === "cancelled" || result.status === "accepted") {
+                        $scope.liveAcceptedApp.cost = result.cost;
+                        $scope.liveAcceptedApp.address = result.address;
+                        $scope.liveAcceptedApp.appointID = result.appointID;
+                        $scope.liveAcceptedApp.carMake = result.carMake;
+                        $scope.liveAcceptedApp.date = result.time;
+                        $scope.liveAcceptedApp.inspectionOnly = result.inspectionOnly;
+                        $scope.liveAcceptedApp.inspectionWarranty = result.inspectionWarranty;
+                        $scope.liveAcceptedApp.mechID = result.mechID;
+                        $scope.liveAcceptedApp.mechName = result.mechName;
+                        $scope.liveAcceptedApp.userCell = result.userCell;
+                        $scope.liveAcceptedApp.custName = result.custName;
+                        $scope.liveAcceptedApp.regNo = result.regNo;
+                        $scope.liveAcceptedApp.status = result.status;
+                        AppCanned = 1;
+                    }
+                },function(data) {
+                    console.log("Func Data:", data);
+                });
+            }
+        }, 2000);
     };
     
     $scope.viewRsvpApp = function (appID) {
@@ -906,11 +1092,79 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
             $scope.viewCurApp.mechID = result.mechID;
             $scope.viewCurApp.mechName = result.mechName;
             $scope.viewCurApp.regNo = result.regNo;
+            $scope.viewCurApp.custName = result.custName;
             $scope.viewCurApp.status = result.status;
             appNav.pushPage('mechView/viewRSVPApp.html', { animation : 'fade' });
         },function(data) {
             console.log("Func Data:", data);
         });
+    };
+    
+    // user check if RSVP appointment was cancelled by user
+    $scope.checkUesrCan = function (appID) {
+        var AppCanned = 0;
+        var timerId = setInterval(function(){
+            
+            if (AppCanned == 1) {
+                clearInterval(timerId);
+                if ($scope.viewCurApp.status === "cancelled") {
+                    // Appointment Data
+                    $scope.myAppointID = "";
+                    $scope.liveConfimApp = [];
+                    $scope.rsvpConfimApp = [];
+
+                    // mechanic data
+                    $scope.curAppointmentList = [];
+                    $scope.curAppointmentAList = [];
+                    $scope.NewAddress = "";
+                    $scope.liveAcceptedApp = [];
+                    $scope.rsvpAcceptedApp = [];
+                    $scope.viewCurApp = [];
+                    $scope.directionsStart = false;
+                    $scope.payment = [];
+                    $scope.assessment = [];
+                    $scope.assessmentPage = 0;
+                    $scope.assessmentNextPage = 0;
+                    $scope.assessmentPrePage = 0;
+                    $scope.assessmentDone = [];
+
+                    $window.localStorage.removeItem('appointID'); 
+                    $window.localStorage.removeItem('assessmentCurPage');
+                    var message = "Appointment Cancelled by user";
+                    ons.notification.alert(message);
+                    appNav.resetToPage('mechView/home.html', { animation : 'fade' });
+                } else if ($scope.viewCurApp.status === "accepted") {
+                    clearInterval(timerId);
+                }
+            } else {      
+                
+                $http.post(apiURL, {
+                    'reqType': 'appointmentRead',
+                    'key': apiKey,
+                    'appointID': appID})
+                .then(function(data){
+                    var result = data.data.html;
+                    if (result.status === "cancelled" || result.status === "accepted") {
+                        $scope.viewCurApp.cost = result.cost;
+                        $scope.viewCurApp.address = result.address;
+                        $scope.viewCurApp.appointID = result.appointID;
+                        $scope.viewCurApp.carMake = result.carMake;
+                        $scope.viewCurApp.date = result.time;
+                        $scope.viewCurApp.inspectionOnly = result.inspectionOnly;
+                        $scope.viewCurApp.inspectionWarranty = result.inspectionWarranty;
+                        $scope.viewCurApp.mechID = result.mechID;
+                        $scope.viewCurApp.mechName = result.mechName;
+                        $scope.viewCurApp.userCell = result.userCell;
+                        $scope.viewCurApp.custName = result.custName;
+                        $scope.viewCurApp.regNo = result.regNo;
+                        $scope.viewCurApp.status = result.status;
+                        AppCanned = 1;
+                    }
+                },function(data) {
+                    console.log("Func Data:", data);
+                });
+            }
+        }, 2000);
     };
     
     // user check for scheduled requests that has nav started
@@ -932,22 +1186,60 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
                 .then(function(data){
                     var result = data.data.html;
                     console.log("AppointmentMechWaitRSVP NAV Data:", result);
-                    if (result.navStarted) {
-                        $scope.liveConfimApp.address = result.address;
-                        $scope.liveConfimApp.appointID = result.appointID;
-                        $scope.liveConfimApp.carMake = result.mechMake;
-                        $scope.liveConfimApp.date = result.time;
-                        $scope.liveConfimApp.inspectionOnly = result.mechInspectionOnly;
-                        $scope.liveConfimApp.inspectionWarranty = result.mechInspectionWarranty;
-                        $scope.liveConfimApp.mechID = result.mechID;
-                        $scope.liveConfimApp.mechName = result.mechName;
-                        $scope.liveConfimApp.mechCell = result.mechCell;
-                        $scope.liveConfimApp.regNo = result.mechReg;
-                        $scope.liveConfimApp.status = result.status;
-                        $scope.myAppointID = result.appointID;
-                        $window.localStorage.setItem('assessmentCurPage','navFrom'); 
-                        $window.localStorage.setItem('appointID',result.appointID);
-                        appNav.pushPage('navigateFrom.html', { animation : 'fade' }); 
+                    if (result.error === '' || !result.error) {
+                        if (result.navStarted) {
+                            $scope.liveConfimApp.address = result.address;
+                            $scope.liveConfimApp.appointID = result.appointID;
+                            $scope.liveConfimApp.carMake = result.mechMake;
+                            $scope.liveConfimApp.date = result.time;
+                            $scope.liveConfimApp.inspectionOnly = result.mechInspectionOnly;
+                            $scope.liveConfimApp.inspectionWarranty = result.mechInspectionWarranty;
+                            $scope.liveConfimApp.mechID = result.mechID;
+                            $scope.liveConfimApp.mechName = result.mechName;
+                            $scope.liveConfimApp.mechCell = result.mechCell;
+                            $scope.liveConfimApp.regNo = result.mechReg;
+                            $scope.liveConfimApp.custName = result.custName;
+                            $scope.liveConfimApp.status = result.status;
+
+                            imgUtils.isImage(result.mechImageURL).then(function(imgresult) {
+                                if (imgresult) {
+                                    $scope.liveConfimApp.mechImageURL = result.mechImageURL;
+                                } else {
+                                    $scope.liveConfimApp.mechImageURL = "images/mechIcon.png";
+                                }
+                            });
+
+                            $scope.myAppointID = result.appointID;
+                            $window.localStorage.setItem('assessmentCurPage','navFrom'); 
+                            $window.localStorage.setItem('appointID',result.appointID);
+                            appNav.pushPage('navigateFrom.html', { animation : 'fade' }); 
+                        } else if (result.invoiceNo !== '') {
+                            $scope.liveConfimApp.address = result.address;
+                            $scope.liveConfimApp.appointID = result.appointID;
+                            $scope.liveConfimApp.carMake = result.mechMake;
+                            $scope.liveConfimApp.date = result.time;
+                            $scope.liveConfimApp.inspectionOnly = result.mechInspectionOnly;
+                            $scope.liveConfimApp.inspectionWarranty = result.mechInspectionWarranty;
+                            $scope.liveConfimApp.mechID = result.mechID;
+                            $scope.liveConfimApp.mechName = result.mechName;
+                            $scope.liveConfimApp.mechCell = result.mechCell;
+                            $scope.liveConfimApp.regNo = result.mechReg;
+                            $scope.liveConfimApp.custName = result.custName;
+                            $scope.liveConfimApp.status = result.status;
+
+                            imgUtils.isImage(result.mechImageURL).then(function(imgresult) {
+                                if (imgresult) {
+                                    $scope.liveConfimApp.mechImageURL = result.mechImageURL;
+                                } else {
+                                    $scope.liveConfimApp.mechImageURL = "images/mechIcon.png";
+                                }
+                            });
+
+                            $scope.myAppointID = result.appointID;
+                            $window.localStorage.setItem('assessmentCurPage','assWait'); 
+                            $window.localStorage.setItem('appointID',$scope.myAppointID);
+                            appNav.pushPage('assessmentWait.html', { animation : 'fade' }); 
+                        }
                     }
                 },function(data) {
                     console.log("Func Data:", data);
@@ -967,50 +1259,61 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
         if ( angular.isDefined(stop) ) return;
         
         stop = $interval(function() {
-            $http.post(apiURL, {
-                'reqType': 'appointmentList'})
-            .then(function(data){
-                var result = data.data.html;
-                result.reverse();
-                var arrayLength = result.length;
-                for (var i = 0; i < arrayLength; i++) {
-                    if (!result[i].mechanic && result[i].status === "made") {
-                        
-                        var nowDate = new Date();
-                        nowDate.setHours(0, 0, 0, 0);
-                        var compDate = new Date(result[i].date);
-                        
-                        console.log("Date Now", nowDate);
-                        console.log("App Date", compDate);
-                        
-                        if (compDate >= nowDate) {
-                            appCt = result[i].type;
-                            appCa = result[i].address;
-                            appCid = result[i].appointID;
-                            console.log("App List Data: ",result[i]);
-                            if (!$scope.appNotifyShown) {
-                                $scope.appNotifyShown = true;
-                                ons.notification.confirm({
-                                    title: 'A New '+appCt+' Appointment',
-                                    messageHTML: 'A new appointment has been made.<br>Address: '+appCa+'<p>Do you accept?</p>',
-                                    buttonLabels: ['Ignore','Yes']
-                                }).then(function(opt){
-                                    console.log(opt); 
-                                    if (opt === 1) {
-                                        $scope.stopRequestLookup();
-                                        $scope.AcceptCallOut(appCid);
-                                    } else {
-                                       return false;
-                                    }
-                                });
+            if(!$scope.appNotifyShown) {
+                $http.post(apiURL, {
+                    'reqType': 'appointmentList'})
+                .then(function(data){
+                    var result = data.data.html;
+                    result.reverse();
+                    var arrayLength = result.length;
+                    for (var i = 0; i < arrayLength; i++) {
+                        if (!result[i].mechanic && result[i].status === "made") {
+
+                            // check app list
+                            if ($scope.appNotifyShownIds.indexOf(result[i].appointID) === -1) {
+
+                                var nowDate = new Date();
+                                nowDate.setMinutes(nowDate.getMinutes() - 30);
+                                var compDate = new Date(result[i].date);
+
+                                console.log("Date Now", nowDate);
+                                console.log("App Date", compDate);
+
+                                if (compDate >= nowDate) {
+                                    appCt = result[i].type;
+                                    appCa = result[i].address;
+                                    appCid = result[i].appointID;
+                                    console.log("App List Data: ",result[i]);
+                                    console.log("appNotifyShown: ",$scope.appNotifyShown);
+                                    console.log("appNotifyShownId: ",$scope.appNotifyShownId);
+
+                                    $scope.appNotifyShown = true;
+
+                                    ons.notification.confirm({
+                                        title: 'A New '+appCt+' Appointment',
+                                        messageHTML: 'A new appointment has been made.<br>Address: '+appCa+'<p>Do you accept?</p>',
+                                        buttonLabels: ['Accept','Decline']
+                                    }).then(function(opt){
+                                        console.log(opt); 
+                                        if (opt === 0) {
+                                            $scope.stopRequestLookup();
+                                            $scope.AcceptCallOut(appCid);
+                                            $scope.appNotifyShown = false;
+                                        } else {
+                                            $scope.appNotifyShownIds.push(appCid);
+                                            $scope.appNotifyShown = false;
+                                            return false;
+                                        }
+                                    });
+                                }
                             }
+                            i = arrayLength;
                         }
-                        i = arrayLength;
-                    }
-                }        
-            },function(data) {
-                console.log("Func Data:", data);
-            });
+                    }        
+                },function(data) {
+                    console.log("Func Data:", data);
+                });
+            }
         }, 10000);
     };
     $scope.stopRequestLookup = function() {
@@ -1056,6 +1359,15 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
                     $scope.user.firstName = data.data.html.firstName;
                     $scope.user.lastName = data.data.html.lastName;
                     $scope.user.type = data.data.html.type;
+                    
+                    imgUtils.isImage(data.data.html.imageURL).then(function(result) {
+                        if (result) {
+                            $scope.user.img = data.data.html.imageURL;
+                        } else {
+                            $scope.user.img = "images/mechIcon.png";
+                        }
+                    });
+                    
                     myModal.show();
                     $scope.data.errorIcon = 'md-spinner';
                     $scope.data.errorIconSpin = true;
@@ -1096,6 +1408,7 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
                                         $scope.liveConfimApp.mechName = result.mechName;
                                         $scope.liveConfimApp.mechCell = result.mechCell;
                                         $scope.liveConfimApp.regNo = result.mechReg;
+                                        $scope.liveConfimApp.custName = result.custName;
                                         $scope.liveConfimApp.status = result.status;
                                         
                                         if (page === 'navFrom') {
@@ -1108,7 +1421,7 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
                                             appNav.pushPage('rateMech.html', { animation : 'fade' });
                                         } else {
                                             ons.notification.alert("Hmmm... Something did not work as accepted.");
-                                            appNav.pushPage('home.html', { animation : 'fade' });
+                                            appNav.resetToPage('home.html', { animation : 'fade' });
                                         }
                                     }
                                 },function(data) {
@@ -1119,7 +1432,7 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
                             },'2000');
                         } else {
                             $timeout(function(){
-                                appNav.pushPage('home.html', { animation : 'fade' });
+                                appNav.resetToPage('home.html', { animation : 'fade' });
                             },'2000');
                         }
                     } else if ($scope.user.type === 'mechanic') {
@@ -1157,6 +1470,7 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
                                         $scope.liveAcceptedApp.mechName = result.mechName;
                                         $scope.liveAcceptedApp.userCell = result.userCell;
                                         $scope.liveAcceptedApp.regNo = result.regNo;
+                                        $scope.liveAcceptedApp.custName = result.custName;
                                         $scope.liveAcceptedApp.status = result.status;
                                         
                                         if (page === 'navTo') {
@@ -1282,6 +1596,8 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
                 $window.localStorage.removeItem('c11email'); 
                 $window.localStorage.removeItem('c11password'); 
                 
+                $scope.stopRequestLookup();
+                
                 var menu = document.getElementById('menu');                
                 
                 if (menu.isOpen) {
@@ -1303,38 +1619,45 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
     };
     
     $scope.navigateToRSVP = function(appID) {
-        console.log("RSVP App ID:", appID);
-        $http.post(apiURL, {
-            'reqType': 'appointmentRead',
-            'key': apiKey,
-            'appointID': appID})
-        .then(function(data){
-            var result = data.data.html;
-            
-            //if (result.status === "confirmed" || result.status === "cancelled") {
-            //    var message = "Appointment Accepted, please continue.";
-            //    ons.notification.alert(message);
-                $scope.liveAcceptedApp.cost = result.cost;
-                $scope.liveAcceptedApp.address = result.address;
-                $scope.liveAcceptedApp.appointID = result.appointID;
-                $scope.liveAcceptedApp.carMake = result.carMake;
-                $scope.liveAcceptedApp.date = result.time;
-                $scope.liveAcceptedApp.inspectionOnly = result.inspectionOnly;
-                $scope.liveAcceptedApp.inspectionWarranty = result.inspectionWarranty;
-                $scope.liveAcceptedApp.mechID = result.mechID;
-                $scope.liveAcceptedApp.mechName = result.mechName;
-                $scope.liveAcceptedApp.regNo = result.regNo;
-                $scope.liveAcceptedApp.status = result.status;
-                $window.localStorage.setItem('assessmentCurPage','navTo'); 
-                $window.localStorage.setItem('appointID',appID);
-                console.log("RSVP App nav details:", $scope.liveAcceptedApp);
-                appNav.pushPage('mechView/navigateTo.html', { animation : 'fade' });
-            //}
-        },function(data) {
-            console.log("Func Data:", data);
+        ons.notification.confirm({
+            title: 'Please note',
+            messageHTML: 'By continuing, you will start the navigation process for the appointment.<p>Do you?</p>',
+            buttonLabels: ['Accept','Cancel']
+        }).then(function(opt){
+            console.log(opt); 
+            if (opt === 0) {
+                $scope.stopRequestLookup();
+                console.log("RSVP App ID:", appID);
+                $http.post(apiURL, {
+                    'reqType': 'appointmentRead',
+                    'key': apiKey,
+                    'appointID': appID})
+                .then(function(data){
+                    var result = data.data.html;
+                    $scope.liveAcceptedApp.cost = result.cost;
+                    $scope.liveAcceptedApp.address = result.address;
+                    $scope.liveAcceptedApp.appointID = result.appointID;
+                    $scope.liveAcceptedApp.carMake = result.carMake;
+                    $scope.liveAcceptedApp.date = result.time;
+                    $scope.liveAcceptedApp.inspectionOnly = result.inspectionOnly;
+                    $scope.liveAcceptedApp.inspectionWarranty = result.inspectionWarranty;
+                    $scope.liveAcceptedApp.mechID = result.mechID;
+                    $scope.liveAcceptedApp.mechName = result.mechName;
+                    $scope.liveAcceptedApp.regNo = result.regNo;
+                    $scope.liveAcceptedApp.custName = result.custName;
+                    $scope.liveAcceptedApp.status = result.status;
+                    $window.localStorage.setItem('assessmentCurPage','navTo'); 
+                    $window.localStorage.setItem('appointID',appID);
+                    console.log("RSVP App nav details:", $scope.liveAcceptedApp);
+                    appNav.pushPage('mechView/navigateTo.html', { animation : 'fade' });
+
+                },function(data) {
+                    console.log("Func Data:", data);
+                });
+            } else {
+                return false;
+            }
         });
-        
-        
     };
     // user await complete Payment
     $scope.waitPaymentComplete = function () {
@@ -1386,7 +1709,8 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
         console.log("Payment Details:", $scope.payment);
         var appID = $scope.liveAcceptedApp.appointID !== '' ? $scope.liveAcceptedApp.appointID : $scope.rsvpAcceptedApp.appointID;
         var ammount = $scope.liveAcceptedApp.cost !== '' ? $scope.liveAcceptedApp.cost : $scope.rsvpAcceptedApp.cost;
-        if ($scope.payment.invoice && $scope.payment.deviceNum) {
+        var sellerNum = $scope.payment.sellerNum;
+        if ($scope.payment.invoice && $scope.payment.deviceNum && sellerNum) {
             myModal.show();
             $scope.data.errorIcon = 'md-spinner';
             $scope.data.errorIconSpin = true;
@@ -1396,6 +1720,7 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
                 'appointID': appID,
                 'amount': 770.00,
                 'invoiceNo': $scope.payment.invoice,
+                'sellerNum': sellerNum,
                 'key': apiKey})
             .then(function(data){
                 myModal.hide();
@@ -1667,7 +1992,7 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
                 $scope.data.errorIconSpin = true;
                 $scope.data.errorCode = 'Processing...';
                 $timeout(function(){
-                     ons.notification.alert("Send data to end user");
+                     ons.notification.alert("Thank you, information was sent to client.");
                     // Appointment Data
                     $scope.myAppointID = "";
                     $scope.liveConfimApp = [];
@@ -1687,6 +2012,7 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
                     $scope.assessmentPrePage = 0;
                     $scope.assessmentDone = [];
                     $scope.appNotifyShown = false;
+                    $scope.appNotifyShownIds = [];
                     
                     // remove inspection storage data
                     $window.localStorage.removeItem('assessmentCurPage'); 
@@ -1826,7 +2152,25 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
                 $scope.rsvpAcceptedApp.mechName = result.mechName;
                 $scope.rsvpAcceptedApp.regNo = result.regNo;
                 $scope.rsvpAcceptedApp.status = result.status;
-                appNav.pushPage('appointmentConfirmed.html', { animation : 'fade' });    
+                appNav.pushPage('appointmentConfirmed.html', { animation : 'fade' });   
+            } else if (result.invoiceNo !== '') {
+                $scope.liveConfimApp.address = result.address;
+                $scope.liveConfimApp.appointID = result.appointID;
+                $scope.liveConfimApp.carMake = result.mechMake;
+                $scope.liveConfimApp.date = result.time;
+                $scope.liveConfimApp.inspectionOnly = result.mechInspectionOnly;
+                $scope.liveConfimApp.inspectionWarranty = result.mechInspectionWarranty;
+                $scope.liveConfimApp.mechID = result.mechID;
+                $scope.liveConfimApp.mechName = result.mechName;
+                $scope.liveConfimApp.mechCell = result.mechCell;
+                $scope.liveConfimApp.regNo = result.mechReg;
+                $scope.liveConfimApp.custName = result.custName;
+                $scope.liveConfimApp.status = result.status;
+                $scope.myAppointID = result.appointID;
+                $window.localStorage.setItem('assessmentCurPage','assWait'); 
+                $window.localStorage.setItem('appointID',$scope.myAppointID);
+                appNav.pushPage('assessmentWait.html', { animation : 'fade' }); 
+
             } else {
                 $scope.liveConfimApp.address = result.address;
                 $scope.liveConfimApp.appointID = result.appointID;
@@ -1839,6 +2183,7 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
                 $scope.liveConfimApp.mechCell = result.mechCell;
                 $scope.liveConfimApp.userCell = result.userCell;
                 $scope.liveConfimApp.regNo = result.mechReg;
+                $scope.liveConfimApp.custName = result.custName;
                 $scope.liveConfimApp.status = result.status;
                 $scope.myAppointID = appID;
                 $window.localStorage.setItem('assessmentCurPage','navFrom'); 
@@ -1902,6 +2247,8 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
     };
     
     $scope.cancelRequest = function (appID) {
+        clearInterval(timerLRCId);
+        timerLRCId = null;
         $http.post(apiURL, {
             'reqType': 'appointmentCancel',
             'appointID': appID})
@@ -1912,6 +2259,8 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
                 buttonLabel: 'Continue',
                 animation: 'default',
                 callback: function() {
+                    //$scope.liveWait = "120";
+
                     // Appointment Data
                     $scope.myAppointID = "";
                     $scope.liveConfimApp = [];
@@ -1930,16 +2279,15 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
                     $scope.assessmentNextPage = 0;
                     $scope.assessmentPrePage = 0;
                     $scope.assessmentDone = [];
-                    $scope.appNotifyShown = false;
+                    $window.localStorage.removeItem('appointID'); 
+                    $window.localStorage.removeItem('assessmentCurPage'); 
                     if ($scope.user.type === 'customer') {
-                        appNav.pushPage('home.html', { animation : 'fade' });
+                        appNav.resetToPage('home.html', { animation : 'fade' });
                     } else if ($scope.user.type === 'mechanic') {
-                        appNav.pushPage('mechView/home.html', { animation : 'fade' });
+                        appNav.resetToPage('mechView/home.html', { animation : 'fade' });
                     }
                 }
             });
-            
-            
         },function(data) {
             console.log("Func Data:", data);
         });
@@ -1969,8 +2317,6 @@ module.controller('mapController', function($scope, $http, $timeout, $interval, 
     
     var markers = [];
     var infowindow = new google.maps.InfoWindow();
-    var directionsService = new google.maps.DirectionsService();
-    var directionsDisplay = new google.maps.DirectionsRenderer();
     
     $scope.map;
     $scope.myLat;
@@ -2023,8 +2369,6 @@ module.controller('mapController', function($scope, $http, $timeout, $interval, 
             getCurrentAddress();
             AppShareData.update($scope.user, $scope.myLat, $scope.myLng, $scope.myAddress, '');
             $scope.map.setCenter({lat:$scope.myLat, lng:$scope.myLng});
-            
-            directionsDisplay.setMap($scope.map);
         },function(data) {
             console.log("location error Data:", data);
             myModal.hide();
@@ -2060,7 +2404,6 @@ module.controller('mapController', function($scope, $http, $timeout, $interval, 
                             $scope.map.setCenter(this.getPosition());
                             infowindow.setContent(this.html);
                             infowindow.open($scope.map, this);
-                            //getDirections(this.getPosition());
                         });
                         $scope.mackMarkers.push(markers[i]); 
                         markers[i].setPosition(store.position);
@@ -2076,22 +2419,7 @@ module.controller('mapController', function($scope, $http, $timeout, $interval, 
             myModal.hide();
         });
     }
-    
-    function getDirections(destination) {
-        var start = destination;
-        var dest = $scope.myLat+','+$scope.myLng;
-        var request = {
-            origin: start,
-            destination: dest,
-            travelMode: google.maps.TravelMode.DRIVING
-        };
-        directionsService.route(request, function (result, status) {
-            if (status == google.maps.DirectionsStatus.OK) {
-                directionsDisplay.setDirections(result);
-            }
-        });
-    }
-    
+        
     function getCurrentAddress() {
         var dest = $scope.myLat+','+$scope.myLng;
         $http.get("https://maps.googleapis.com/maps/api/geocode/json?latlng="+dest+"&key=AIzaSyBSsY5dquU2xR5nuMri9DMPl43sLUjQh8c")
@@ -2119,11 +2447,6 @@ module.controller('mapController', function($scope, $http, $timeout, $interval, 
                 'appointID': curAppId})
             .then(function(data){
                 $scope.directionsStart = true;
-                directionsService.route(request, function (result, status) {
-                    if (status == google.maps.DirectionsStatus.OK) {
-                        directionsDisplay.setDirections(result);
-                    }
-                });
             },function(data) {
                 console.log("startNav Data:", data);
             });
@@ -2180,25 +2503,7 @@ module.controller('mapController', function($scope, $http, $timeout, $interval, 
                             if (data.data.html.length > 0) {
                                 for (var i = 0; i < data.data.html.length; i++) {
                                     if (data.data.html[i].mechID === result.mechanic) {
-                                        var dest = data.data.html[i].latitude+','+data.data.html[i].longitude;
-                                        $scope.toAddress = dest;
-                                        
-                                        console.log("dest Data:", dest);
-                                        var start = result.address;
-                                        var request = {
-                                            origin: dest,
-                                            destination: start,
-                                            travelMode: google.maps.TravelMode.DRIVING
-                                        };
-                                        console.log("Direction TO DATA:", request);
-                                        directionsService.route(request, function (result, status) {
-                                            console.log("Direction Status:", status);
-                                            console.log("Direction Result:", result);
-                                            if (status == google.maps.DirectionsStatus.OK) {
-                                                directionsDisplay.setDirections(result);
-                                            }
-                                        });
-                                        
+                                                                               
                                     }
                                 } 
                             } 
@@ -2224,8 +2529,6 @@ module.controller('mapMechController', function($scope, $http, $timeout, $interv
     
     var markers = [];
     var infowindow = new google.maps.InfoWindow();
-    var directionsService = new google.maps.DirectionsService();
-    var directionsDisplay = new google.maps.DirectionsRenderer();
     
     $scope.map;
     $scope.myLat;
@@ -2279,8 +2582,6 @@ module.controller('mapMechController', function($scope, $http, $timeout, $interv
             getCurrentAddress();
             AppShareData.update($scope.user, $scope.myLat, $scope.myLng, $scope.myAddress, '');
             $scope.map.setCenter({lat:$scope.myLat, lng:$scope.myLng});
-            
-            directionsDisplay.setMap($scope.map);
         },function(data) {
             console.log("Data:", data);
             myModal.hide();
@@ -2330,21 +2631,6 @@ module.controller('mapMechController', function($scope, $http, $timeout, $interv
         });
     }
     
-    function getDirections(destination) {
-        var start = destination;
-        var dest = $scope.myLat+','+$scope.myLng;
-        var request = {
-            origin: start,
-            destination: dest,
-            travelMode: google.maps.TravelMode.DRIVING
-        };
-        directionsService.route(request, function (result, status) {
-            if (status == google.maps.DirectionsStatus.OK) {
-                directionsDisplay.setDirections(result);
-            }
-        });
-    }
-    
     function getCurrentAddress() {
         var dest = $scope.myLat+','+$scope.myLng;
         $http.get("https://maps.googleapis.com/maps/api/geocode/json?latlng="+dest+"&key=AIzaSyBSsY5dquU2xR5nuMri9DMPl43sLUjQh8c")
@@ -2360,11 +2646,6 @@ module.controller('mapMechController', function($scope, $http, $timeout, $interv
         if ($scope.toAddress !== '' || address !== '') {
             var start = $scope.myLat+','+$scope.myLng;
             var dest = $scope.toAddress;
-            var request = {
-                origin: start,
-                destination: dest,
-                travelMode: google.maps.TravelMode.DRIVING
-            };
             
             $http.post(apiURL, {
                 'reqType': 'startNav',
@@ -2374,11 +2655,6 @@ module.controller('mapMechController', function($scope, $http, $timeout, $interv
                 console.log("startNav Data:", data);
                 $scope.directionsStart = true;
                 $scope.navToURL = "https://www.google.com/maps/dir/?api=1&destination="+dest+"&travelmode=driving";
-                directionsService.route(request, function (result, status) {
-                    if (status == google.maps.DirectionsStatus.OK) {
-                        directionsDisplay.setDirections(result);
-                    }
-                });
                 $window.localStorage.setItem('assessmentCurPage','navTo'); 
                 $window.localStorage.setItem('appointID',curAppId);
             },function(data) {

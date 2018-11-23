@@ -1,5 +1,5 @@
 <ons-page id="mapPage">
-    <ons-toolbar>
+    <ons-toolbar modifier="homeTop">
         <div class="left">
             <ons-toolbar-button ng-click="openMenu()">
                 <ons-icon icon="md-menu"></ons-icon>
@@ -8,7 +8,7 @@
     </ons-toolbar>
     <div ng-init="checkForSRNStart()"></div>
     <div id="map-container" ng-controller="mapController">
-        <ng-map default-style="false" center="current-location"  disable-default-u-i="true" zoom="14" geo-fallback-center="[-25.7585829, 28.057867]" geo-callback="callbackFunc('you')">
+        <ng-map default-style="false" center="current-location" disable-default-u-i="true" zoom="14" geo-fallback-center="[-25.7585829, 28.057867]" geo-callback="callbackFunc('you')">
             <marker position="current-position" title="You are here"></marker>
         </ng-map>
         <section id="mapActions">

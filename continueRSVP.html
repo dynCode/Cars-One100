@@ -12,7 +12,7 @@
         <p>Select Date & Time:</p>
         <ons-row>
             <ons-col style="border-top: 1px solid #333; border-right: 1px solid #333; padding: 5px 2px">
-                <div moment-picker="rsvpConfimApp.datepicker" format="YYYY-MM-DD">
+                <div moment-picker="rsvpConfimApp.datepicker" format="YYYY-MM-DD" min-date="rsvpConfimApp.NowDate">
                     <ons-icon icon="ion-calendar" size="30px" style="color: #ab0019;"></ons-icon> {{ rsvpConfimApp.datepicker || 'Select Date' }} 
                 </div>
             </ons-col>

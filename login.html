@@ -28,15 +28,16 @@
                     <ons-checkbox input-id="checkUpdates" ng-model="login.updates"></ons-checkbox>
                 </label>
                 <label for="checkUpdates" class="center">
-                    I authorise Cars One100 to proses my information for a Better User Experience, Marketing and Extra Valued added Products.
+                    I authorise Cars One100 to process my information for a Better User Experience, Marketing and Extra Valued added Products.
                 </label>
             </ons-list-item>
         </ons-list>
     </div>
-    <div style="padding: 0px 30px; text-align: right;">
-         <p><ons-fab modifier="makeBigger" ng-click="logMeIn()"><ons-icon icon="fa-arrow-right"></ons-icon></ons-fab> </p>
+    <div style="padding: 0px 30px; text-align: center;">
+        <p><ons-fab modifier="makeBigger" ng-click="logMeIn()"><ons-icon icon="fa-arrow-right"></ons-icon></ons-fab> </p>
     </div>
+    <br>
     <div style="text-align: center; font-size: 14px; color: #C82026;">Not signed-up?  <span ng-click="appNav.pushPage('signUp.html', { animation : 'fade' })"><strong>Create account</strong></span></div>
-    <p>&nbsp;</p>
+    <br>
     <div style="text-align: center; font-size: 14px; color: #C82026;"><span ng-click="appNav.pushPage('termsConditions.html', { animation : 'fade' })">Terms & Conditions</span> | <span  ng-click="appNav.pushPage('termsService.html', { animation : 'fade' })">Terms of Service</span><br><span  ng-click="appNav.pushPage('PrivacyPolicy.html', { animation : 'fade' })">Privacy Policy</span></div>
 </ons-page>

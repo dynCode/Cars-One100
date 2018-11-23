@@ -18,7 +18,7 @@
         <!-- ng Google Maps -->
         <script src="js/ng-map.min.js"></script>
         <!-- Date Time Picker -->
-        <script src="js/dateTimePicker/moment.js"></script>
+        <script src="js/dateTimePicker/moment-with-locales.js"></script>
         <script src="js/dateTimePicker/angular-moment-picker.min.js"></script>
         <link rel="stylesheet" href="js/dateTimePicker/angular-moment-picker.min.css" />
         <link rel="stylesheet" href="js/dateTimePicker/material-ui.min.css" />
@@ -36,7 +36,29 @@
         <script>
             ons.disableAutoStyling();
             ons.ready(function() {  
-                
+                var onSuccess = function(position) {
+                    console.log('Latitude: '          + position.coords.latitude          + '\n' +
+                                'Longitude: '         + position.coords.longitude         + '\n' +
+                                'Altitude: '          + position.coords.altitude          + '\n' +
+                                'Accuracy: '          + position.coords.accuracy          + '\n' +
+                                'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
+                                'Heading: '           + position.coords.heading           + '\n' +
+                                'Speed: '             + position.coords.speed             + '\n' +
+                                'Timestamp: '         + position.timestamp                + '\n');
+                };
+
+                // onError Callback receives a PositionError object
+                //
+                function onError(error) {
+                    //alert('code: '    + error.code    + '\n' +
+                    //      'message: ' + error.message + '\n');
+                    var message = "There was a problem connecting to Google Maps. Please try again, or make sure your Geolocation services is turned on.";
+                    ons.notification.alert(message);
+                }
+
+                navigator.geolocation.getCurrentPosition(onSuccess, onError, { maximumAge: 8000, timeout: 10000, enableHighAccuracy: true });
+                ons.disableDeviceBackButtonHandler();
+                document.addEventListener('backbutton', function () {}, false);
             });
         </script>
     </head>
@@ -46,7 +68,7 @@
             <ons-page>
                 <div style="background-color: #ab0019; height: 100px; color: #fff; text-align: center;position: relative; z-index: 2;" ng-if="userLoggedin">
                     <ons-row>
-                      <ons-col width="100px"><img src="images/mechIcon.png" alt="mechFace" style="width: 80px; padding: 10px;" ></ons-col>
+                      <ons-col width="100px"><img ng-src="{{user.img}}" alt="mechFace" style="width: 80px; padding: 10px;" ></ons-col>
                       <ons-col style="color: #fff; text-align: left; line-height: 100px;">
                           {{user.firstName}} {{user.lastName}}
                       </ons-col>
@@ -121,9 +143,9 @@
                     <ons-page modifier="BodyHome">
                         <p style="text-align: center; padding: 10px 30px;"><img src="images/logo.jpg" alt="logo" style="width: 100%; max-width: 800px;" /></p>
                         <h4 style="background-color: #ab0019; color: #fff; padding: 20px 30px; font-weight: normal; text-align: center">LOADING...</h4>
-                        <div id="mapActions" style="text-align: center;">
+                        <!--<div id="mapActions" style="text-align: center;">
                             Brought to you by <br><img src="images/dynLogo.png" alt="logo" />
-                        </div>
+                        </div>-->
                         <div ng-init="init()">
                         </div>
                     </ons-page>

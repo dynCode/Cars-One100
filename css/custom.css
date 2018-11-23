@@ -125,3 +125,17 @@ ons-toast .toast {
 .fab--makeBigger {
     transform: scale(1.3) !important;
 }
+
+.list {
+    background-image: none !important;
+}
+
+.toolbar--homeTop {
+    background-image: none !important;
+    background-color: rgba(171,0,25,0.5);
+}
+
+.toolbar--homeTop .toolbar-button {
+    color: #fff;
+    font-size: 21px;
+}

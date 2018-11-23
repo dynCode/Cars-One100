@@ -1,11 +1,13 @@
 <ons-page>
     <div style="background-color: #ab0019; height: 15%; color: #fff;">
-        <ons-back-button><ons-icon icon="fa-times"></ons-icon></ons-back-button>
+        <ons-back-button style="color: #fff;"></ons-back-button>
         <h4 style="color: #fff;padding: 5px 20px;">Scheduled appointment</h4>
     </div>
-    <div style="padding: 20px 30px;">
+    <div style="padding: 20px 30px;" ng-init="checkUesrCan(viewCurApp.appointID)">
+        <p>{{viewCurApp.custName}}</p>
         <p>{{viewCurApp.date}}</p>
         <p>{{viewCurApp.address}}</p>
+        
         <ons-button modifier="largeFront" ng-click="AcceptRSVPCallOut(viewCurApp.appointID)">Accept Scheduled Appointment</ons-button>
     </div>
 </ons-page>

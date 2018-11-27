@@ -68,7 +68,7 @@
             <ons-page>
                 <div style="background-color: #ab0019; height: 100px; color: #fff; text-align: center;position: relative; z-index: 2;" ng-if="userLoggedin">
                     <ons-row>
-                      <ons-col width="100px"><img ng-src="{{user.img}}" alt="mechFace" style="width: 80px; padding: 10px;" ></ons-col>
+                      <ons-col width="100px"><img ng-src="{{user.img}}" alt="mechFace" style="max-width: 80px; max-height: 80px; padding: 10px;" ></ons-col>
                       <ons-col style="color: #fff; text-align: left; line-height: 100px;">
                           {{user.firstName}} {{user.lastName}}
                       </ons-col>

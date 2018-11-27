@@ -2,8 +2,8 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "com.carsone100app"
-        versionCode = "101" 
-        version   = "1.0.1">
+        versionCode = "102" 
+        version   = "1.0.2">
 
     <name>Cars One100</name>
 
@@ -65,10 +65,10 @@
         
         <!-- Config usage update -->
         <edit-config target="NSPhotoLibraryUsageDescription" file="*-Info.plist" mode="merge">
-            <string>We are using the Camera for uploading your vehicle license disk for verification.</string>
+            <string>The App will use the uploaded image of the vehicle's license disk from your photo library, to verify the vehicle and provide full vehicle history if available.</string>
         </edit-config>
         <edit-config target="NSCameraUsageDescription" file="*-Info.plist" mode="merge">
-            <string>We are using the Camera for uploading your vehicle license disk for verification.</string>
+            <string>The App will use the uploaded image of the vehicle's license disk from your camera, to verify the vehicle and provide full vehicle history if available.</string>
         </edit-config>
         <edit-config target="NSLocationWhenInUseUsageDescription" file="*-Info.plist" mode="merge">
             <string>We are using your location to display your location and to find mechanics in your vicinity.</string>
@@ -94,12 +94,12 @@
     <!-- Third party plugins -->
     
     <plugin name="cordova-plugin-camera" spec="~2.4.1">
-        <variable name="CAMERA_USAGE_DESCRIPTION" value="We are using the Camera for uploading your vehicle license disk for verification." />
-        <variable name="PHOTOLIBRARY_USAGE_DESCRIPTION" value="We are using the Camera for uploading your vehicle license disk for verification." />
+        <variable name="CAMERA_USAGE_DESCRIPTION" value="The App will use the uploaded image of the vehicle's license disk from your camera, to verify the vehicle and provide full vehicle history if available." />
+        <variable name="PHOTOLIBRARY_USAGE_DESCRIPTION" value="The App will use the uploaded image of the vehicle's license disk from photo library, to verify the vehicle and provide full vehicle history if available." />
     </plugin>
     <plugin name="cordova-plugin-ios-camera-permissions" spec="1.0.3" >
-        <variable name="CAMERA_USAGE_DESCRIPTION" value="We are using the Camera for uploading your vehicle license disk for verification." />
-        <variable name="PHOTOLIBRARY_USAGE_DESCRIPTION" value="We are using the Camera for uploading your vehicle license disk for verification." />
+        <variable name="CAMERA_USAGE_DESCRIPTION" value="The App will use the uploaded image of the vehicle's license disk from your camera, to verify the vehicle and provide full vehicle history if available." />
+        <variable name="PHOTOLIBRARY_USAGE_DESCRIPTION" value="The App will use the uploaded image of the vehicle's license disk from photo library, to verify the vehicle and provide full vehicle history if available." />
     </plugin>
     
     <plugin name="cordova-plugin-device-orientation" />

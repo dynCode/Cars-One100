@@ -313,9 +313,8 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
                         }
                     }
                 } else {
-                    
-                    var message = data.data.html.error;
-                    ons.notification.alert(message);
+                    //var message = data.data.html.error;
+                    //ons.notification.alert(message);
                     appNav.pushPage('frontPage.html', { animation : 'fade' });
                 }
 
@@ -2212,7 +2211,7 @@ module.controller('AppController', function($scope, $timeout, $http, NgMap, AppS
     };
     
     $scope.openAssReport = function (appId) {
-        window.open('https://apis4africa.com/carsone100/assessment/report/'+appId,'_system','');
+        window.open('https://apis4africa.com/carsone100/assessment/report/'+appId, '_blank', 'location=yes');
     };
     
     // get mech inspections Reports
@@ -2346,7 +2345,7 @@ module.controller('mapController', function($scope, $http, $timeout, $interval, 
     // onError Callback receives a PositionError object
     //
     function onError(error) {
-        var message = 'code: ' + error.code + '\n' + 'message: ' + error.message + '\n';
+        var message = "There was a problem connecting to Google Maps. Please try again, or make sure your Geolocation services is turned on.";
         ons.notification.alert(message);
     }
     
@@ -2560,7 +2559,7 @@ module.controller('mapMechController', function($scope, $http, $timeout, $interv
     // onError Callback receives a PositionError object
     //
     function onError(error) {
-        var message = 'code: ' + error.code + '\n' + 'message: ' + error.message + '\n';
+        var message = "There was a problem connecting to Google Maps. Please try again, or make sure your Geolocation services is turned on.";
         ons.notification.alert(message);
     }
 

@@ -5,31 +5,31 @@
     <h4 style="padding: 20px 30px; font-weight: normal;">Sign Up to CarsOne100</h4>
     <div style="text-align: center; padding: 20px 30px;">
         <p>
-            <ons-input id="name" modifier="underbar material" placeholder="Name" float ng-model="signUp.name" style="width: 100%; padding: 20px 0;"></ons-input>
+            <ons-input id="name" modifier="underbar" placeholder="Name" float ng-model="signUp.name" style="width: 100%; padding: 20px 0;"></ons-input>
         </p>
         <p>
-            <ons-input id="surname" modifier="underbar material" placeholder="Surname" float ng-model="signUp.surname" style="width: 100%; padding: 20px 0;"></ons-input>
+            <ons-input id="surname" modifier="underbar" placeholder="Surname" float ng-model="signUp.surname" style="width: 100%; padding: 20px 0;"></ons-input>
         </p>
         <ons-row>
             <ons-col width="50px" style="line-height: 62px;">+27</ons-col>
-            <ons-col><ons-input id="telnum" type="number" modifier="underbar material" placeholder="Enter your mobile number" float ng-model="signUp.telnumber" style="width: 100%; padding: 20px 0;"></ons-input></ons-col>
+            <ons-col><ons-input id="telnum" type="number" modifier="underbar" placeholder="Enter your mobile number" float ng-model="signUp.telnumber" style="width: 100%; padding: 20px 0;"></ons-input></ons-col>
         </ons-row>
         <p>
-            <ons-input id="username" type="email" modifier="underbar material" placeholder="Email" float ng-model="signUp.email" style="width: 100%; padding: 20px 0;"></ons-input>
+            <ons-input id="username" type="email" modifier="underbar" placeholder="Email" float ng-model="signUp.email" style="width: 100%; padding: 20px 0;"></ons-input>
         </p>
         <p>
-            <ons-input id="username2" type="email" modifier="underbar material" placeholder="Verify Email" float ng-model="signUp.email2" style="width: 100%; padding: 20px 0;"></ons-input>
+            <ons-input id="username2" type="email" modifier="underbar" placeholder="Verify Email" float ng-model="signUp.email2" style="width: 100%; padding: 20px 0;"></ons-input>
         </p>
         <p><small>Please Note: <i>Passwords must contain letters, numbers and symbols and 8 characters long.</i></small></p>
         <ons-row>
             <ons-col>
-                <ons-input id="password" type="{{passInput}}" modifier="underbar material" placeholder="Password" float ng-model="signUp.password" style="width: 100%; padding: 20px 0;"></ons-input>
+                <ons-input id="password" type="{{passInput}}" modifier="underbar" placeholder="Password" float ng-model="signUp.password" style="width: 100%; padding: 20px 0;"></ons-input>
             </ons-col>
             <ons-col width="50px" style="line-height: 62px;"><div ng-if="passInput === 'password'"><ons-icon icon="fa-eye" ng-click="showPassword()"></ons-icon></div><div ng-if="passInput === 'text'"><ons-icon icon="fa-eye-slash" ng-click="hidePassword()"></ons-icon></div></ons-col>
         </ons-row>
         <ons-row>
             <ons-col>
-                <ons-input id="password2" type="{{passInput}}" modifier="underbar material" placeholder="Verify Password" float ng-model="signUp.password2" style="width: 100%; padding: 20px 0;"></ons-input>
+                <ons-input id="password2" type="{{passInput}}" modifier="underbar" placeholder="Verify Password" float ng-model="signUp.password2" style="width: 100%; padding: 20px 0;"></ons-input>
             </ons-col>
             <ons-col width="50px" style="line-height: 62px;"><div ng-if="passInput === 'password'"><ons-icon icon="fa-eye" ng-click="showPassword()"></ons-icon></div><div ng-if="passInput === 'text'"><ons-icon icon="fa-eye-slash" ng-click="hidePassword()"></ons-icon></div></ons-col>
         </ons-row>

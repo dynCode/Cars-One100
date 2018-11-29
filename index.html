@@ -34,7 +34,7 @@
         <!-- custom JS file -->
         <script src="js/custom.js"></script>
         <script>
-            ons.disableAutoStyling();
+            //ons.disableAutoStyling();
             ons.ready(function() {  
                 var onSuccess = function(position) {
                     console.log('Latitude: '          + position.coords.latitude          + '\n' +
@@ -59,6 +59,7 @@
                 navigator.geolocation.getCurrentPosition(onSuccess, onError, { maximumAge: 8000, timeout: 10000, enableHighAccuracy: true });
                 ons.disableDeviceBackButtonHandler();
                 document.addEventListener('backbutton', function () {}, false);
+                ons.fastClick.destroy();
             });
         </script>
     </head>

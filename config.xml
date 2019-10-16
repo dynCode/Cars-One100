@@ -2,8 +2,8 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "com.carsone100app"
-        versionCode = "103" 
-        version   = "1.0.3">
+        versionCode = "104" 
+        version   = "1.0.4">
 
     <name>Cars One100</name>
 
@@ -18,7 +18,7 @@
     <author href="https://carsone100.com/" email="hanru@one100tech.com">
         One100 Tech
     </author>
-    <preference name="phonegap-version" value="cli-8.0.0" />
+    <preference name="phonegap-version" value="cli-9.0.0" />
     <platform name="ios" >
         <preference name="orientation" value="portrait" />
         <preference name="fullscreen" value="false" />  
